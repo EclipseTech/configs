@@ -4,7 +4,7 @@
 " Sets how many lines of history VIM has to remember
 set history=700
 
-set nocompatible
+set nocompatible " don't try to be compatible with vi
 
 set nobackup
 
@@ -24,6 +24,7 @@ set smartcase
 
 " Highlight search results
 set hlsearch
+" set incsearch
 
 " For regular expressions turn magic on
 set magic
@@ -56,6 +57,7 @@ set tabstop=4
 set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
+set backspace=indent,eol,start
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
