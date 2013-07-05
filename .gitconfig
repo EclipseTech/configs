@@ -7,6 +7,7 @@
     ui = true
 [core]
     editor = vim
+    whitespace = -space-before-tab,cr-at-eol,tab-in-indent,trailing-space,tabwidth=4
 [gitreview]
     username = jef.mallal
 [alias]
@@ -14,4 +15,4 @@
     new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 [color "diff"]
-	whitespace = red reverse
+    whitespace = red reverse
