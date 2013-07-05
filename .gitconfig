@@ -1,0 +1,17 @@
+[branch]
+    autosetuprebase = always
+[user]
+    name = Jef Mallal
+    email = jef.mallal@hp.com
+[color]
+    ui = true
+[core]
+    editor = vim
+[gitreview]
+    username = jef.mallal
+[alias]
+    tags = show-ref --tags
+    new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+[color "diff"]
+	whitespace = red reverse

@@ -32,6 +32,9 @@ set magic
 " Show matching brackets when text indicator is over them
 set showmatch
 
+" Set statusline
+" set statusline=%t
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -40,6 +43,8 @@ filetype on
 filetype plugin on
 syntax enable
 syn on
+" Autocompletion
+" set omnifunc=syntaxcomplete#Complete
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -80,10 +85,18 @@ autocmd BufWrite *.js :call FixWS()
 autocmd BufWrite *.coffee :call FixWS()
 autocmd BufWrite *.* :call FixWS()
 
+" autocmd FileType xml exe ':silent 1,$!XMLLINT_INDENT='    ' xmllint --format --recover - 2>/dev/null'
+" autocmd FileType xml exe '$!XMLLINT_INDENT='    ' xmllint --format -'
+" func! FormatXML()
+"   exe $!XMLLINT_INDENT='    ' xmllint --format -"
+" endfunc
+" autocmd BufWrite *.xml :call FormatXML()
+
+autocmd FileType xml exe "let &l:equalprg='xmllint --format -'"
+
 :autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 :highlight ExtraWhitespace ctermbg=red guibg=red
 :match ExtraWhitespace /\s\+$/
-
 
 set pastetoggle=<F2>
 set number
