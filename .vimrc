@@ -108,3 +108,7 @@ set wildmenu
 " Enable mouse support in console
 "set mouse=a
 
+" Show tabs and trailing whitespace
+set listchars=tab:▸-,trail:·,
+set list
+
