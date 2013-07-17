@@ -4,7 +4,14 @@
     name = Jef Mallal
     email = jef.mallal@hp.com
 [color]
-    ui = true
+    ui = auto
+    diff = auto
+    status = auto
+    branch = auto
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
 [core]
     editor = vim
     whitespace = -space-before-tab,cr-at-eol,tab-in-indent,trailing-space,tabwidth=4
@@ -14,5 +21,20 @@
     tags = show-ref --tags
     new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
     lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+# Will start a repo in this directory
+    this = !git init && git add -A && git commit -m \"initial commit\"
+# ignore/unignore file without .gitignore
+    assume   = update-index --assume-unchanged
+    assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
+    unassume = update-index --no-assume-unchanged
+    unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
+# list ignored files
+    assumed  = "!git ls-files -v | grep ^h | cut -c 3-"
+# Select the entirety of either our or their file in a 3 way merge.
+    ours   = "!f() { git checkout --ours $@ && git add $@; }; f"
+    theirs = "!f() { git checkout --theirs $@ && git add $@; }; f"
+# Print just the name of the current branch; useful for scripting.
+    branch-name = !git branch | grep '* ' | tr -d '* '
+    shallow = clone --depth 1
 [color "diff"]
     whitespace = red reverse
