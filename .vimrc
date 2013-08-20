@@ -32,17 +32,23 @@ set magic
 " Show matching brackets when text indicator is over them
 set showmatch
 
-" Set statusline
+" map leader from \ to ,
+let mapleader=","
+
+" set statusline
 " set statusline=%t
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable syntax highlighting
+set t_Co=256
 filetype on
 filetype plugin on
+filetype plugin indent on
 syntax enable
 syn on
+syntax on
 " Autocompletion
 " set omnifunc=syntaxcomplete#Complete
 
@@ -106,9 +112,22 @@ set wildmode=longest,list,full
 set wildmenu
 
 " Enable mouse support in console
-"set mouse=a
+set mouse=n
 
 " Show tabs and trailing whitespace
 set listchars=tab:▸-,trail:·,
 set list
+
+" plugins
+" installed plugins: conque_term NERD_tree supertab airline nerdcommenter
+" vim-fugitive vim-surround vim-repeat
+"execute pathogen#infect()
+""au VimEnter * NERDTreeToggle
+"nmap <F3> :NERDTreeToggle<CR>
+" airline plugin
+"set laststatus=2
+"set ttimeoutlen=50
+"set noshowmode
+"let g:bufferline_echo = 0
+"let g:airline_powerline_fonts = 1
 
