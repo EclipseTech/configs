@@ -2,13 +2,15 @@
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Sets how many lines of history VIM has to remember
-set history=700
+set history=2000
 
 set nocompatible " don't try to be compatible with vi
 
 set nobackup
 
 set virtualedit=all
+
+set shell=bash
 
 " Set to auto read when a file is changed from the outside
 set autoread
@@ -43,8 +45,9 @@ let mapleader=","
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable syntax highlighting
 set t_Co=256
-filetype on
-filetype plugin on
+highlight Pmenu ctermfg=2 gui=bold
+highlight Pmenu ctermbg=238 gui=bold
+filetype off "off reqiured by Vundle
 filetype plugin indent on
 syntax enable
 syn on
@@ -120,14 +123,33 @@ set list
 
 " plugins
 " installed plugins: conque_term NERD_tree supertab airline nerdcommenter
-" vim-fugitive vim-surround vim-repeat
-"execute pathogen#infect()
-""au VimEnter * NERDTreeToggle
-"nmap <F3> :NERDTreeToggle<CR>
+" vim-fugitive vim-surround vim-repeat syntastic YouCompleteMe
+" Vundle
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+Bundle 'gmarik/vundle'
+"My bundles
+Bundle 'tpope/vim-fugitive'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'scrooloose/nerdtree'
+Bundle 'rosenfeld/conque-term'
+Bundle 'ervandew/supertab'
+Bundle 'scrooloose/syntastic'
+Bundle 'tpope/vim-repeat'
+Bundle 'Valloric/YouCompleteMe'
+Bundle 'bling/vim-airline'
+Bundle 'tpope/vim-surround'
+"au VimEnter * NERDTreeToggle
+nmap <F3> :NERDTreeToggle<LF>
+nmap <F4> :SyntasticToggleMode<LF>
 " airline plugin
-"set laststatus=2
-"set ttimeoutlen=50
-"set noshowmode
-"let g:bufferline_echo = 0
-"let g:airline_powerline_fonts = 1
-
+set laststatus=2
+set ttimeoutlen=50
+set noshowmode
+let g:bufferline_echo = 0
+let g:airline_powerline_fonts = 1
+" syntastic
+let g:syntastic_python_checkers=['pyflakes', 'pylint', 'python']
+let g:syntastic_mode_map = { 'mode': 'passive',
+                           \ 'active_filetypes': [],
+                           \ 'passive_filetypes': [] }
