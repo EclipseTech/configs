@@ -19,12 +19,10 @@ set autoread
 set ruler
 
 " Ignore case when searching
-set ignorecase
-
 " When searching try to be smart about cases
-set smartcase
-
 " Highlight search results
+set ignorecase
+set smartcase
 set hlsearch
 " set incsearch
 
@@ -35,7 +33,15 @@ set magic
 set showmatch
 
 " map leader from \ to ,
-let mapleader=","
+let mapleader=','
+let maplocalleader='\'
+
+" Yanks go on clipboard
+set clipboard+=unnamed
+
+" Open new split below or vsplit right
+set splitbelow
+set splitright
 
 " set statusline
 " set statusline=%t
@@ -50,10 +56,8 @@ highlight Pmenu ctermbg=238 gui=bold
 filetype off "off reqiured by Vundle
 filetype plugin indent on
 syntax enable
-syn on
 syntax on
-" Autocompletion
-" set omnifunc=syntaxcomplete#Complete
+highlight SpellBad cterm=underline ctermfg=darkred ctermbg=None
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -68,10 +72,18 @@ set smarttab
 set shiftwidth=4
 set tabstop=4
 
-set ai "Auto indent
-set si "Smart indent
+set autoindent "Auto indent
+set smartindent "Smart indent
 set wrap "Wrap lines
 set backspace=indent,eol,start
+
+" Formatting turn off automatic comment on o, O and enter
+autocmd FileType * setlocal formatoptions-=ro
+
+" Source the vimrc file after saving it
+"autocmd BufWritePost .vimrc source $MYVIMRC
+" Fast edit the .vimrc file using ',x'
+nnoremap <Leader>x :tabedit $MYVIMRC<LF>
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
@@ -122,23 +134,29 @@ set listchars=tab:▸-,trail:·,
 set list
 
 " plugins
-" installed plugins: conque_term NERD_tree supertab airline nerdcommenter
+" installed plugins: conque_term NERD_tree airline nerdcommenter
 " vim-fugitive vim-surround vim-repeat syntastic YouCompleteMe
 " Vundle
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
 "My bundles
-Bundle 'tpope/vim-fugitive'
+Bundle 'Valloric/YouCompleteMe'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'bling/vim-airline'
+Bundle 'rosenfeld/conque-term'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
-Bundle 'rosenfeld/conque-term'
-Bundle 'ervandew/supertab'
 Bundle 'scrooloose/syntastic'
+Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-repeat'
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'bling/vim-airline'
 Bundle 'tpope/vim-surround'
+" Colors
+Bundle 'Lokaltog/vim-distinguished'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'desert256.vim'
+Bundle 'nanotech/jellybeans.vim'
+Bundle 'tpope/vim-vividchalk'
 "au VimEnter * NERDTreeToggle
 nmap <F3> :NERDTreeToggle<LF>
 nmap <F4> :SyntasticToggleMode<LF>
@@ -149,7 +167,12 @@ set noshowmode
 let g:bufferline_echo = 0
 let g:airline_powerline_fonts = 1
 " syntastic
-let g:syntastic_python_checkers=['pyflakes', 'pylint', 'python']
+let g:syntastic_python_checkers=['pyflakes', 'python']
 let g:syntastic_mode_map = { 'mode': 'passive',
                            \ 'active_filetypes': [],
                            \ 'passive_filetypes': [] }
+let g:syntastic_warning_symbol="⚠"
+let g:syntastic_error_symbol="✗"
+let g:syntastic_enable_signs=1
+"let g:syntastic_python_pylint_args='-d C0301,C0111,R0903 -f parseable -r n -i y'
+
