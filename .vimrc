@@ -2,7 +2,7 @@
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Sets how many lines of history VIM has to remember
-set history=2000
+set history=10000
 
 set nocompatible " don't try to be compatible with vi
 
@@ -11,6 +11,8 @@ set nobackup
 set virtualedit=all
 
 set shell=bash
+
+set encoding=utf-8
 
 " Set to auto read when a file is changed from the outside
 set autoread
@@ -38,6 +40,7 @@ let maplocalleader='\'
 
 " Yanks go on clipboard
 set clipboard+=unnamed
+set clipboard+=unnamedplus
 
 " Open new split below or vsplit right
 set splitbelow
@@ -104,7 +107,8 @@ autocmd BufWrite *.xml :call FixWS()
 autocmd BufWrite *.java :call FixWS()
 autocmd BufWrite *.js :call FixWS()
 autocmd BufWrite *.coffee :call FixWS()
-autocmd BufWrite *.* :call FixWS()
+nnoremap <Leader>fs :call FixWS()<LF>
+"autocmd BufWrite *.* :call FixWS()
 
 " autocmd FileType xml exe ':silent 1,$!XMLLINT_INDENT='    ' xmllint --format --recover - 2>/dev/null'
 " autocmd FileType xml exe '$!XMLLINT_INDENT='    ' xmllint --format -'
@@ -134,15 +138,12 @@ set listchars=tab:▸-,trail:·,
 set list
 
 " plugins
-" installed plugins: conque_term NERD_tree airline nerdcommenter
-" vim-fugitive vim-surround vim-repeat syntastic YouCompleteMe
 " Vundle
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
-"My bundles
+" Bundles
 Bundle 'Valloric/YouCompleteMe'
-Bundle 'altercation/vim-colors-solarized'
 Bundle 'bling/vim-airline'
 Bundle 'rosenfeld/conque-term'
 Bundle 'scrooloose/nerdcommenter'
@@ -157,15 +158,19 @@ Bundle 'altercation/vim-colors-solarized'
 Bundle 'desert256.vim'
 Bundle 'nanotech/jellybeans.vim'
 Bundle 'tpope/vim-vividchalk'
-"au VimEnter * NERDTreeToggle
+
+" plugin mappings
 nmap <F3> :NERDTreeToggle<LF>
 nmap <F4> :SyntasticToggleMode<LF>
+
 " airline plugin
 set laststatus=2
 set ttimeoutlen=50
+set timeoutlen=5000
 set noshowmode
 let g:bufferline_echo = 0
 let g:airline_powerline_fonts = 1
+
 " syntastic
 let g:syntastic_python_checkers=['pyflakes', 'python']
 let g:syntastic_mode_map = { 'mode': 'passive',
