@@ -38,6 +38,14 @@ set showmatch
 let mapleader=','
 let maplocalleader='\'
 
+" tab navigation like firefox
+nnoremap <C-S-tab> :tabprevious<LF>
+nnoremap <C-tab>   :tabnext<LF>
+nnoremap <C-t>     :tabnew<LF>
+inoremap <C-S-tab> <Esc>:tabprevious<LF>
+inoremap <C-tab>   <Esc>:tabnext<LF>
+inoremap <C-t>     <Esc>:tabnew<LF>
+
 " Yanks go on clipboard
 set clipboard+=unnamed
 set clipboard+=unnamedplus
