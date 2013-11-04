@@ -18,9 +18,16 @@
 [gitreview]
     username = jef.mallal
 [alias]
+    amend = commit --amend
     tags = show-ref --tags
     new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
     lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    lgp = !git lg -p
+    lgn = !git lg --name-only
+    lgs = !git lg --stat
+    logn = log --name-only
+#Show tracked files
+    tracked = git ls-files
 # Will start a repo in this directory
     this = !git init && git add -A && git commit -m \"initial commit\"
 # ignore/unignore file without .gitignore
@@ -38,3 +45,7 @@
     shallow = clone --depth 1
 [color "diff"]
     whitespace = red reverse
+[color "status"]
+    added = green
+    changed = red
+    untracked = cyan
