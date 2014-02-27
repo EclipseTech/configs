@@ -169,6 +169,7 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
 " Bundles
+Bundle 'bling/vim-airline'
 Bundle 'nvie/vim-flake8'
 Bundle 'rosenfeld/conque-term'
 Bundle 'scrooloose/nerdcommenter'
@@ -178,7 +179,6 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-surround'
 "Bundle 'Valloric/YouCompleteMe'
-"Bundle 'bling/vim-airline'
 " Colors
 Bundle 'Lokaltog/vim-distinguished'
 Bundle 'altercation/vim-colors-solarized'
@@ -194,18 +194,18 @@ nmap <F4> :SyntasticToggleMode<LF>
 nmap <F5> :NERDTreeToggle<LF>
 
 " airline plugin
-"set laststatus=2
-"set ttimeoutlen=50
-"set timeoutlen=5000
-"set noshowmode
-"let g:bufferline_echo = 0
-"let g:airline_powerline_fonts = 1
-"let g:Powerline_symbols = "fancy"
-"if !exists('g:airline_symbols')
-  "let g:airline_symbols = {}
-"endif
-"let g:airline_symbols.space = "\ua0"
-"set guifont=MyFont\ for\ Powerline
+set laststatus=2
+set ttimeoutlen=50
+set timeoutlen=5000
+set noshowmode
+let g:bufferline_echo = 0
+let g:airline_powerline_fonts = 1
+let g:Powerline_symbols = "fancy"
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+let g:airline_symbols.space = "\ua0"
+set guifont=MyFont\ for\ Powerline
 
 " syntastic
 let g:syntastic_python_checkers=['pylint', 'pyflakes', 'python', 'flake8']
