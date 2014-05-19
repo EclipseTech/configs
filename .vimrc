@@ -50,6 +50,16 @@ set wildmenu
 set mouse=n
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Abbreviations
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+iab shebash #!/usr/bin/env bash
+iab [bash] #!/usr/bin/env bash
+iab shepython #!/usr/bin/env python
+iab [python] #!/usr/bin/env python
+iab #t <C-V><C-I>
+iab teh the
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Navigation
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " allows moving beyond eol

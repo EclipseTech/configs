@@ -43,6 +43,9 @@
 # Print just the name of the current branch; useful for scripting.
     branch-name = !git branch | grep '* ' | tr -d '* '
     shallow = clone --depth 1
+# Cleans
+    test-clean = clean -X -d -n
+    do-clean = clean -X -d -f
 [color "diff"]
     whitespace = red reverse
 [color "status"]
