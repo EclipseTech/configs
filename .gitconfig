@@ -52,3 +52,7 @@
     added = green
     changed = red
     untracked = cyan
+[git-up "bundler"]
+    check = true
+[git-up "fetch"]
+    all = true

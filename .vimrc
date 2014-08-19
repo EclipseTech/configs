@@ -91,8 +91,6 @@ autocmd BufReadPost *
 set t_Co=256
 highlight Pmenu ctermfg=2 gui=bold
 highlight Pmenu ctermbg=238 gui=bold
-filetype off "off reqiured by Vundle
-filetype plugin indent on
 syntax enable
 syntax on
 highlight SpellBad cterm=underline ctermfg=darkred ctermbg=None
@@ -175,8 +173,9 @@ set number
 " => Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Vundle
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+filetype off "off reqiured by Vundle
+set rtp+=~/.vim/bundle/Vundle.vim/
+call vundle#begin()
 Bundle 'gmarik/vundle'
 " Bundles
 Bundle 'bling/vim-airline'
@@ -195,6 +194,9 @@ Bundle 'altercation/vim-colors-solarized'
 Bundle 'desert256.vim'
 Bundle 'nanotech/jellybeans.vim'
 Bundle 'tpope/vim-vividchalk'
+call vundle#end()
+filetype plugin indent on
+" to install plugins run $vim +PluginInstall +qa
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin settings
