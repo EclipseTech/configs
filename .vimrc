@@ -7,7 +7,8 @@ set history=100000
 " tell it to use an undo file
 set undofile
 " set a directory to store the undo history
-set undodir=~/.vimundo/
+silent !mkdir -p ~/.vim/undo/ >/dev/null 2>&1
+set undodir=~/.vim/undo/
 
 " don't try to be compatible with vi
 set nocompatible
