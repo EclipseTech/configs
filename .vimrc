@@ -2,7 +2,7 @@
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Sets how many lines of history VIM has to remember
-set history=100000
+set history=1000000
 
 " tell it to use an undo file
 set undofile
@@ -65,6 +65,12 @@ iab teh the
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " allows moving beyond eol
 set virtualedit=all
+
+" buffer navigation alt+1 previous alt+2 next
+nmap <esc>1 :N<CR>
+nmap <esc>2 :n<CR>
+"nnoremap <M-1> <Esc>:N<CR>
+"nnoremap <M-2> <Esc>:n<CR>
 
 " tab navigation like firefox
 nnoremap <C-S-tab> :tabprevious<LF>
@@ -174,63 +180,75 @@ set number
 " => Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Vundle
-filetype off "off reqiured by Vundle
-set rtp+=~/.vim/bundle/Vundle.vim/
-call vundle#begin()
-Bundle 'gmarik/vundle'
-" Bundles
-Bundle 'bling/vim-airline'
-Bundle 'nvie/vim-flake8'
-Bundle 'rosenfeld/conque-term'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/syntastic'
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-surround'
-"Bundle 'Valloric/YouCompleteMe'
-" Colors
-Bundle 'Lokaltog/vim-distinguished'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'desert256.vim'
-Bundle 'nanotech/jellybeans.vim'
-Bundle 'tpope/vim-vividchalk'
-call vundle#end()
-filetype plugin indent on
-" to install plugins run $vim +PluginInstall +qa
+if executable('git') && !isdirectory(expand("~/.vim/bundle/Vundle.vim"))
+    silent !git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/Vundle.vim
+    let s:setupvundle=1
+endif
+if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
+    set rtp+=~/.vim/bundle/Vundle.vim/
+    filetype off "off reqiured by Vundle
+    call vundle#begin()
+    Bundle 'gmarik/vundle'
+    " Bundles
+    Bundle 'bling/vim-airline'
+    Bundle 'nvie/vim-flake8'
+    Bundle 'rosenfeld/conque-term'
+    Bundle 'scrooloose/nerdcommenter'
+    Bundle 'scrooloose/nerdtree'
+    Bundle 'scrooloose/syntastic'
+    Bundle 'tpope/vim-fugitive'
+    Bundle 'tpope/vim-repeat'
+    Bundle 'tpope/vim-surround'
+    "Bundle 'Valloric/YouCompleteMe'
+    " Colors
+    Bundle 'Lokaltog/vim-distinguished'
+    Bundle 'altercation/vim-colors-solarized'
+    Bundle 'desert256.vim'
+    Bundle 'nanotech/jellybeans.vim'
+    Bundle 'tpope/vim-vividchalk'
+    call vundle#end()
+    filetype plugin indent on
+    " This automatically installs plugins on first time vim setup
+    " to install plugins manually run $vim +PluginInstall +qa
+    if exists('s:setupvundle') && s:setupvundle
+        unlet s:setupvundle
+        PluginInstall
+        quitall " Close the bundle install window.
+    endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" plugin mappings
-nmap <F4> :SyntasticToggleMode<LF>
-nmap <F5> :NERDTreeToggle<LF>
+    " plugin mappings
+    nmap <F4> :SyntasticToggleMode<LF>
+    nmap <F5> :NERDTreeToggle<LF>
 
-" airline plugin
-set laststatus=2
-set ttimeoutlen=50
-set timeoutlen=5000
-set noshowmode
-let g:bufferline_echo = 0
-let g:airline_powerline_fonts = 1
-let g:Powerline_symbols = "fancy"
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
+    " airline plugin
+    set laststatus=2
+    set ttimeoutlen=50
+    set timeoutlen=5000
+    set noshowmode
+    let g:bufferline_echo = 0
+    let g:airline_powerline_fonts = 1
+    let g:Powerline_symbols = "fancy"
+    if !exists('g:airline_symbols')
+      let g:airline_symbols = {}
+    endif
+    let g:airline_symbols.space = "\ua0"
+    set guifont=MyFont\ for\ Powerline
+
+    " syntastic
+    let g:syntastic_python_checkers=['pylint', 'pyflakes', 'python', 'flake8']
+    let g:syntastic_mode_map = { 'mode': 'passive',
+                               \ 'active_filetypes': [],
+                               \ 'passive_filetypes': [] }
+    let g:syntastic_warning_symbol="⚠"
+    let g:syntastic_error_symbol="✗"
+    let g:syntastic_enable_signs=1
+
+    " vim-flake8
+    "let g:flake8_ignore=""
+    "let g:flake8_max_line_length=80
+    "autocmd BufWritePost *.py call Flake8() " run flake8 on python file on write
 endif
-let g:airline_symbols.space = "\ua0"
-set guifont=MyFont\ for\ Powerline
-
-" syntastic
-let g:syntastic_python_checkers=['pylint', 'pyflakes', 'python', 'flake8']
-let g:syntastic_mode_map = { 'mode': 'passive',
-                           \ 'active_filetypes': [],
-                           \ 'passive_filetypes': [] }
-let g:syntastic_warning_symbol="⚠"
-let g:syntastic_error_symbol="✗"
-let g:syntastic_enable_signs=1
-
-" vim-flake8
-"let g:flake8_ignore=""
-"let g:flake8_max_line_length=80
-"autocmd BufWritePost *.py call Flake8() " run flake8 on python file on write
 
