@@ -185,6 +185,7 @@ autocmd BufReadPost *
 set t_Co=256
 highlight Pmenu ctermfg=2 gui=bold
 highlight Pmenu ctermbg=238 gui=bold
+highlight MatchParen cterm=underline ctermbg=white ctermfg=magenta
 syntax enable
 syntax on
 highlight SpellBad cterm=underline ctermfg=darkred ctermbg=None
