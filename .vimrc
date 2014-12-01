@@ -15,6 +15,8 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     " Plugins
     Plugin 'bartman/git-wip'          " commit to git on save (git log wip/<branch>)
     Plugin 'bling/vim-airline'        " status line
+    Plugin 'davidhalter/jedi-vim'     " Python autocompletion
+    Plugin 'ervandew/supertab'        " Tab completion
     Plugin 'kien/ctrlp.vim'           " ctrl+p to easy open files from current directory
     Plugin 'nvie/vim-flake8'          " flake8 vim integration
     Plugin 'Raimondi/YAIFA'           " Yet Another Indent Finder, Almost
@@ -33,6 +35,7 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     Plugin 'nanotech/jellybeans.vim'
     Plugin 'tpope/vim-vividchalk'
     call vundle#end()
+    filetype plugin on
     filetype plugin indent on
     " This automatically installs plugins on first time vim setup
     " to install plugins manually run $vim +PluginInstall +qa
@@ -51,6 +54,12 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
 
     " git-wip plugin
     so ~/.vim/bundle/git-wip/vim/plugin/git-wip.vim
+
+    " Jedi
+    let g:jedi#use_splits_not_buffers = "right"
+
+    " SuperTab
+    let g:SuperTabDefaultCompletionType = "<c-n>"
 
     " airline plugin
     set laststatus=2
@@ -181,8 +190,9 @@ autocmd BufReadPost *
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Enable syntax highlighting
+" Set 256 color mode
 set t_Co=256
+" Enable syntax highlighting
 highlight Pmenu ctermfg=2 gui=bold
 highlight Pmenu ctermbg=238 gui=bold
 highlight MatchParen cterm=underline ctermbg=white ctermfg=magenta
