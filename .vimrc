@@ -27,7 +27,6 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     Plugin 'tpope/vim-fugitive'       " Vim git wrapper
     Plugin 'tpope/vim-repeat'         " Use . to repeat in plugin context (needed for vim-surround)
     Plugin 'tpope/vim-surround'       " Surround sections in parens, brackets, quotes, XML tags, and more
-    "Plugin 'Valloric/YouCompleteMe'  " Auto-completion
     " Colors
     Plugin 'altercation/vim-colors-solarized'
     Plugin 'desert256.vim'
@@ -35,7 +34,6 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     Plugin 'nanotech/jellybeans.vim'
     Plugin 'tpope/vim-vividchalk'
     call vundle#end()
-    filetype plugin on
     filetype plugin indent on
     " This automatically installs plugins on first time vim setup
     " to install plugins manually run $vim +PluginInstall +qa
@@ -73,21 +71,18 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
       let g:airline_symbols = {}
     endif
     let g:airline_symbols.space = "\ua0"
-    "set guifont=MyFont\ for\ Powerline
 
     " syntastic
-    let g:syntastic_python_checkers=['pylint', 'pyflakes', 'python', 'flake8']
+    let g:syntastic_python_checkers=['flake8', 'python']
     let g:syntastic_mode_map = { 'mode': 'passive',
-                               \ 'active_filetypes': [],
+                               \ 'active_filetypes': ['py', 'python'],
                                \ 'passive_filetypes': [] }
-    let g:syntastic_warning_symbol="⚠"
+    let g:syntastic_warning_symbol="☢" "☢ ⚠☣▲△!
     let g:syntastic_error_symbol="✗"
     let g:syntastic_enable_signs=1
-
-    " vim-flake8
-    "let g:flake8_ignore=""
-    "let g:flake8_max_line_length=80
-    "autocmd BufWritePost *.py call Flake8() " run flake8 on python file on write
+    " E225 missing whitespace around operator
+    " E226 missing whitespace around arithmetic operator
+    let g:syntastic_python_flake8_args = '--ignore="E225,E226"'
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -133,11 +128,17 @@ set clipboard+=unnamed
 set clipboard+=unnamedplus
 
 " Open new split below or vsplit right
-set splitbelow
+"set splitbelow "temporarily off due to jedi or supertab plugin issue
 set splitright
 
 " set paste mode to F2
 set pastetoggle=<F2>
+
+" Tab completion for insert mode
+set completeopt=longest,menuone,preview
+" open omni completion menu closing previous if open and opening new menu without changing the text
+inoremap <expr> <C-Space> (pumvisible() ? (col('.') > 1 ? '<Esc>i<Right>' : '<Esc>i') : '') .
+            \ '<C-x><C-o><C-r>=pumvisible() ? "\<lt>C-n>\<lt>C-p>\<lt>Down>" : ""<CR>'
 
 " Tab completion for command-line mode
 set wildmode=longest,list,full
