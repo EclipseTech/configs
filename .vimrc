@@ -3,6 +3,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Vundle (vim set-up to work without vundle installed)
 set nocompatible "required by vundle
+" Automatically setup vundle if possible
 if executable('git') && !isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     silent !git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/Vundle.vim
     let s:setupvundle=1
@@ -35,7 +36,7 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     Plugin 'tpope/vim-vividchalk'
     call vundle#end()
     filetype plugin indent on
-    " This automatically installs plugins on first time vim setup
+    " This automatically installs plugins on first time vundle setup
     " to install plugins manually run $vim +PluginInstall +qa
     if exists('s:setupvundle') && s:setupvundle
         unlet s:setupvundle
@@ -52,9 +53,6 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
 
     " git-wip plugin
     so ~/.vim/bundle/git-wip/vim/plugin/git-wip.vim
-
-    " Jedi
-    let g:jedi#use_splits_not_buffers = "right"
 
     " SuperTab
     let g:SuperTabDefaultCompletionType = "<c-n>"
@@ -91,26 +89,26 @@ endif
 " Sets how many lines of history VIM has to remember
 set history=1000000
 
-" tell it to use an undo file
+" Use an undo file
 set undofile
-" set a directory to store the undo history
+" Set a directory to store the undo history
 if !isdirectory(expand("~/.vim/undo/"))
     silent !mkdir -p ~/.vim/undo/ >/dev/null 2>&1
 endif
 set undodir=~/.vim/undo/
 
-" don't try to be compatible with vi
+" Don't try to be compatible with vi
 set nocompatible
 
-" don't backup with ~ files
+" Don't backup with ~ files
 set nobackup
-" don't use swapfiles .swp
+" Don't use swapfiles .swp
 set noswapfile
 
 " :shell will bring up bash shell
 set shell=bash
 
-" set defualt file encoding
+" Set default file encoding
 set encoding=utf-8
 
 " Set to auto read when a file is changed from the outside
@@ -119,11 +117,11 @@ set autoread
 " For regular expressions turn magic on
 set magic
 
-" map leader from \ to ,
+" Map leader from \ to ,
 let mapleader=','
 let maplocalleader='\'
 
-" Yanks go on clipboard if clipboard is enabled
+" Yanks go on clipboard if clipboard is enabled (note: doesn't seem to work)
 set clipboard+=unnamed
 set clipboard+=unnamedplus
 
@@ -136,7 +134,7 @@ set pastetoggle=<F2>
 
 " Tab completion for insert mode
 set completeopt=longest,menuone,preview
-" open omni completion menu closing previous if open and opening new menu without changing the text
+" Ctrl+Space to open omni completion menu closing previous if open and opening new menu without changing the text
 inoremap <expr> <C-Space> (pumvisible() ? (col('.') > 1 ? '<Esc>i<Right>' : '<Esc>i') : '') .
             \ '<C-x><C-o><C-r>=pumvisible() ? "\<lt>C-n>\<lt>C-p>\<lt>Down>" : ""<CR>'
 
@@ -160,16 +158,14 @@ iab teh the
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Navigation
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" allows moving beyond eol
+" Allows moving beyond eol
 set virtualedit=all
 
-" buffer navigation alt+1 previous alt+2 next
+" Buffer navigation alt+1 previous alt+2 next
 nmap <esc>1 :N<CR>
 nmap <esc>2 :n<CR>
-"nnoremap <M-1> <Esc>:N<CR>
-"nnoremap <M-2> <Esc>:n<CR>
 
-" tab navigation like firefox
+" Tab navigation like firefox (Doesn't work in most terminals)
 nnoremap <C-S-tab> :tabprevious<LF>
 nnoremap <C-tab>   :tabnext<LF>
 nnoremap <C-t>     :tabnew<LF>
@@ -193,10 +189,12 @@ autocmd BufReadPost *
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set 256 color mode
 set t_Co=256
-" Enable syntax highlighting
+" Popup menu colors
 highlight Pmenu ctermfg=2 gui=bold
 highlight Pmenu ctermbg=238 gui=bold
+" Paren matching colors
 highlight MatchParen cterm=underline ctermbg=white ctermfg=magenta
+" Enable syntax highlighting
 syntax enable
 syntax on
 highlight SpellBad cterm=underline ctermfg=darkred ctermbg=None
@@ -236,7 +234,7 @@ func! FixWS()
   set ff=unix
   retab
 endfunc
-" Fix whitespace on these extensions
+" Auto-fix whitespace on these extensions
 autocmd BufWrite *.py :call FixWS()
 autocmd BufWrite *.xml :call FixWS()
 autocmd BufWrite *.java :call FixWS()
@@ -255,7 +253,7 @@ autocmd FileType xml exe "let &l:equalprg='xmllint --format -'"
 :match ExtraWhitespace /\s\+$/
 
 " Show tabs and trailing whitespace
-set listchars=tab:▸-,trail:·,
+set listchars=tab:⇒-,trail:·,    "⇒ ▸
 set list
 
 " Ignore case when searching
@@ -273,6 +271,6 @@ set ruler
 " Show matching brackets when text indicator is over them
 set showmatch
 
-" show line numbers
+" Show line numbers
 set number
 
