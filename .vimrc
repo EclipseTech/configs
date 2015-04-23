@@ -50,6 +50,7 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     " plugin mappings
     nmap <F4> :SyntasticToggleMode<LF>
     nmap <F5> :NERDTreeToggle<LF>
+    let jedi#goto_assignments_command = "<F3>"
 
     " git-wip plugin
     so ~/.vim/bundle/git-wip/vim/plugin/git-wip.vim
@@ -73,14 +74,14 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     " syntastic
     let g:syntastic_python_checkers=['flake8', 'python']
     let g:syntastic_mode_map = { 'mode': 'passive',
-                               \ 'active_filetypes': ['py', 'python'],
+                               \ 'active_filetypes': [],
                                \ 'passive_filetypes': [] }
     let g:syntastic_warning_symbol="☢" "☢ ⚠☣▲△!
     let g:syntastic_error_symbol="✗"
     let g:syntastic_enable_signs=1
     " E225 missing whitespace around operator
     " E226 missing whitespace around arithmetic operator
-    let g:syntastic_python_flake8_args = '--ignore="E225,E226"'
+    let g:syntastic_python_flake8_args = '--ignore="E225,E226,E501"'
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -150,7 +151,7 @@ set mouse=n
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 iab shebash #!/bin/bash
 iab [bash] #!/usr/bin/env bash
-iab shepython #!/usr/local/bin/python
+iab shepython #!/usr/bin/python
 iab [python] #!/usr/bin/env python
 iab #t <C-V><C-I>
 iab teh the
