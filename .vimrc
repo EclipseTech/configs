@@ -88,7 +88,7 @@ endif
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Sets how many lines of history VIM has to remember
-set history=1000000
+set history=100000
 
 " Use an undo file
 set undofile
