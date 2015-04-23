@@ -10,14 +10,14 @@ promptinit
 LEFT_COLOR='light-green'
 RIGHT_COLOR='green'
 if [ -f ~/.zsh-colors ]; then . ~/.zsh-colors; fi
-PS1='%F{$LEFT_COLOR}%n@%m:$ %f'
+PS1='%F{$LEFT_COLOR}%n@%m:%(!.#.$) %f'
 setopt prompt_subst
 RPROMPT='%F{$RIGHT_COLOR}$(git-rprompt)%~%f'
 
 ################################################################
 # => Aliases
 ################################################################
-alias ls="pwd; ls -F --color=auto"
+alias ls="ls -F --color=auto"
 alias vi="vim"
 alias grep="grep --color=auto --exclude-dir=*.git"
 alias egrep="egrep --color=auto --exclude-dir=*.git"
@@ -32,7 +32,7 @@ alias ipython="ipython --no-confirm-exit"
 alias gst="git status -u"
 alias gb="git branch -vv"
 alias gba="git branch -vv -a"
-alias sz='source ~/.zshrc'
+alias sz='exec zsh'
 alias ez='vim ~/.zshrc'
 
 ################################################################
@@ -40,6 +40,12 @@ alias ez='vim ~/.zshrc'
 ################################################################
 alias -g G="| grep"
 alias -g L="| less"
+alias -g ...="../.."
+alias -g ....="../.."
+alias -g ..2="../.."
+alias -g ..3="../../.."
+alias -g ..4="../../../.."
+alias -g ..5="../../../../.."
 
 ################################################################
 # => Auto Completion
@@ -170,6 +176,7 @@ setopt listpacked
 setopt nohup
 setopt notify
 setopt completeinword
+# Type dir name to cd
 setopt autocd
 setopt interactivecomments
 unsetopt bashautolist
@@ -182,8 +189,6 @@ unsetopt nullglob
 setopt incappendhistory
 # ignore consecutive dups in history
 setopt histignoredups
-# share history between multiple shells
-setopt share_history
 setopt autopushd pushdignoredups pushdtohome
 # Avoid having to manually run rehash
 _force_rehash() {
@@ -238,21 +243,20 @@ zle -N decrease-number _decrease_number
 bindkey '^A' increase-number
 bindkey '^X' decrease-number
 
-# Commented out until time to test if working
-#function my-backward-kill-line() {
-    ## If there is text to the left of the cursor
-    #if [ -n "$LBUFFER" ]; then
-        #zle backward-kill-line
-    #else
-        #CUTBUFFER=
-    #fi
-    ## Always clear the kill ring (talk about a security hole!)
-    #killring=
-#}
-#zle -N my-backward-kill-line
-#bindkey "^U" my-backward-kill-line
-#bindkey "^Y" yank
-#bindkey "^?" backward-delete-char # the default is vi-backward-delete-char, which actually fills the ^y buffer
+function my-backward-kill-line() {
+    # If there is text to the left of the cursor
+    if [ -n "$LBUFFER" ]; then
+        zle backward-kill-line
+    else
+        CUTBUFFER=
+    fi
+    # Always clear the kill ring (talk about a security hole!)
+    killring=
+}
+zle -N my-backward-kill-line
+bindkey "^U" my-backward-kill-line
+bindkey "^Y" yank
+bindkey "^?" backward-delete-char # the default is vi-backward-delete-char, which actually fills the ^y buffer
 
 ################################################################
 # => Dropbox
