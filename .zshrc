@@ -109,6 +109,8 @@ bindkey '\e[3~' delete-char
 bindkey "[1;5D" vi-backward-word
 # ctrl+rightarrow go forward a word
 bindkey "[1;5C" vi-forward-word
+# ctrl+delete delete word forward from cursor
+bindkey '[3;5~' kill-word
 bindkey "" history-incremental-search-backward
 # Get args from previous commands with alt-. and alt-m
 autoload -Uz copy-earlier-word
