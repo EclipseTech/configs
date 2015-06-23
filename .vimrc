@@ -17,6 +17,7 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     Plugin 'bartman/git-wip'          " commit to git on save (git log wip/<branch>)
     Plugin 'bling/vim-airline'        " status line
     Plugin 'davidhalter/jedi-vim'     " Python autocompletion
+    Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'} " Docker syntax
     Plugin 'ervandew/supertab'        " Tab completion
     Plugin 'kien/ctrlp.vim'           " ctrl+p to easy open files from current directory
     Plugin 'nvie/vim-flake8'          " flake8 vim integration
@@ -48,9 +49,16 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
 " => Plugin settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " plugin mappings
-    nmap <F4> :SyntasticToggleMode<LF>
+    nmap <F6> :SyntasticToggleMode<LF>
     nmap <F5> :NERDTreeToggle<LF>
     let jedi#goto_assignments_command = "<F3>"
+    let g:jedi#goto_definitions_command = "<F4>"
+
+    " Jedi plugin
+    let g:jedi#auto_initialization = 1      " Auto init jedi
+    let g:jedi#popup_on_dot = 1             " Popup on .
+    let g:jedi#popup_select_first = 0       " Don't select first popup
+    let g:jedi#rename_command = "<leader>r" " Rename = ,r
 
     " git-wip plugin
     so ~/.vim/bundle/git-wip/vim/plugin/git-wip.vim
@@ -122,7 +130,7 @@ set magic
 let mapleader=','
 let maplocalleader='\'
 
-" Yanks go on clipboard if clipboard is enabled (note: doesn't seem to work)
+" Yanks go on clipboard if vim compiled with +clipboard
 set clipboard+=unnamed
 set clipboard+=unnamedplus
 
@@ -166,6 +174,19 @@ set virtualedit=all
 nmap <esc>1 :N<CR>
 nmap <esc>2 :n<CR>
 
+" Prevent escape from moving the cursor one character to the left
+"  required for backward/forward ctrl+left/right consistancy
+let CursorColumnI = 0 "the cursor column position in INSERT
+autocmd InsertEnter * let CursorColumnI = col('.')
+autocmd CursorMovedI * let CursorColumnI = col('.')
+autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) | endif
+
+" backward/forward ctrl+left/right
+nnoremap <C-Left>  b
+nnoremap <C-Right> w
+inoremap <C-Left>  <esc>bi
+inoremap <C-Right> <esc>wi
+
 " Tab navigation like firefox (Doesn't work in most terminals)
 nnoremap <C-S-tab> :tabprevious<LF>
 nnoremap <C-tab>   :tabnext<LF>
@@ -180,10 +201,12 @@ inoremap <C-t>     <Esc>:tabnew<LF>
 nnoremap <Leader>x :tabedit $MYVIMRC<LF>
 
 " Return to last edit position when opening files
-autocmd BufReadPost *
-     \ if line("'\"") > 0 && line("'\"") <= line("$") |
-     \   exe "normal! g`\"" |
-     \ endif
+if has("autocmd")
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \ exe "normal! g'\"" |
+    \ endif
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts

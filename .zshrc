@@ -34,6 +34,9 @@ alias gb="git branch -vv"
 alias gba="git branch -vv -a"
 alias sz='exec zsh'
 alias ez='vim ~/.zshrc'
+function find-large-files() {
+    find . -type f -size +10000k -exec ls -lh {} \; | awk '{ print $5 ":	" $9 }' | sort -h
+}
 
 ################################################################
 # => Global Aliases
@@ -61,8 +64,10 @@ zstyle ':completion:*' verbose yes
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _force_rehash _complete _ignored
 zstyle ':completion:*' insert-unambiguous true
+# Colors for all completions
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'm:{a-zA-Z}={A-Za-z}' 'm:{a-zA-Z}={A-Za-z}' 'm:{a-zA-Z}={A-Za-z}'
+# Case insensitive, dash/underscore insensitive, partial-word, and substring matching
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' original true
 zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
 # Tab completion for kill and killall
@@ -100,10 +105,15 @@ case $TERM in (xterm*)
     bindkey '\e[H' beginning-of-line
     bindkey '\e[F' end-of-line ;;
 esac
+# Home
 bindkey OH beginning-of-line
+# End
 bindkey OF end-of-line
+# Page Up
 bindkey '[5~' up-line-or-history
+# Page Down
 bindkey '[6~' down-line-or-history
+# Delete key
 bindkey '\e[3~' delete-char
 # ctrl+leftarrow go back a word
 bindkey "[1;5D" vi-backward-word
@@ -159,6 +169,7 @@ LISTMAX=200
 export TZ='America/Denver'
 # Turn on unicode support
 export LANG="en_US.UTF-8"
+# Add ~/git-scripts and ~/bin to path
 export PATH=$PATH:~/git-scripts:~/bin
 export PIP_DOWNLOAD_CACHE=~/.pip_download_cache
 # Set up dir colors for ls and zsh tab completion
@@ -172,7 +183,7 @@ setopt extendedglob
 setopt dotglob
 # Tab once = list options, again start completing options
 setopt automenu
-# Don't start completing options immediately
+# Don't start completing options until another tab press
 unsetopt menucomplete
 setopt listpacked
 setopt nohup
@@ -248,7 +259,7 @@ bindkey '^X' decrease-number
 function my-backward-kill-line() {
     # If there is text to the left of the cursor
     if [ -n "$LBUFFER" ]; then
-        zle backward-kill-line
+        zle kill-whole-line
     else
         CUTBUFFER=
     fi
@@ -259,22 +270,4 @@ zle -N my-backward-kill-line
 bindkey "^U" my-backward-kill-line
 bindkey "^Y" yank
 bindkey "^?" backward-delete-char # the default is vi-backward-delete-char, which actually fills the ^y buffer
-
-################################################################
-# => Dropbox
-################################################################
-# Workaround for dbus not properly exiting (prevents logout and kills dropbox otherwise)
-# sometimes 'service messagebus restart' seems to fix it (centos)
-export DBUS_SESSION_BUS_ADDRESS=:0.0
-
-# If dropbox is installed, check if it's running, and start it if not
-if [ -e ~/bin/dropbox ]; then
-    if dropbox status 2>&1 | grep -q -i "isn't running"
-    then
-        DISPLAY_SAVE=$DISPLAY
-        unset DISPLAY
-        ~/bin/dropbox start
-        DISPLAY=$DISPLAY_SAVE
-    fi
-fi
 
