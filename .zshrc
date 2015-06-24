@@ -60,13 +60,14 @@ compinit
 # Line required in ~/.ssh/config
 #   HashKnownHosts no
 zstyle -e ':completion::*:*:*:hosts' hosts 'reply=(${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) /dev/null)"}%%[# ]*}//,/ })'
+# shows documentation if available (ls -<TAB> shows ls option docs)
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _force_rehash _complete _ignored
 zstyle ':completion:*' insert-unambiguous true
 # Colors for all completions
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# Case insensitive, dash/underscore insensitive, partial-word, and substring matching
+# Case and dash/underscore insensitive, partial-word, and substring matching
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' original true
 zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
