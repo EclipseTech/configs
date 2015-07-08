@@ -218,6 +218,8 @@ fi
 # Print logged-in-from ip
 echo -n "You are: "
 who -m
+# List directory after cd
+function chpwd() { ls }
 
 ################################################################
 # => Misc and Workarounds
@@ -240,6 +242,14 @@ zle -N _history-incremental-preserving-pattern-search-backward
 bindkey "^R" _history-incremental-preserving-pattern-search-backward
 bindkey -M isearch "^R" history-incremental-pattern-search-backward
 bindkey "^S" history-incremental-pattern-search-forward
+
+# up/down arrows search history based on beginning of line
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search
+bindkey "^[[B" down-line-or-beginning-search
 
 # Make ^A and ^X increase and decrease the nearest number to left of cursor
 _increase_number() {
