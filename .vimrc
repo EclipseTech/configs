@@ -57,7 +57,7 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     " Jedi plugin
     let g:jedi#auto_initialization = 1      " Auto init jedi
     let g:jedi#popup_on_dot = 1             " Popup on .
-    let g:jedi#popup_select_first = 0       " Don't select first popup
+    "let g:jedi#popup_select_first = 0       " Don't select first popup
     let g:jedi#rename_command = "<leader>r" " Rename = ,r
 
     " git-wip plugin

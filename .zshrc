@@ -129,6 +129,22 @@ zle -N copy-earlier-word
 bindkey '\em' copy-earlier-word
 bindkey '\e.' insert-last-word
 
+# Run deactive when in virtualenv on ^D
+function deactivate_or_exit() {
+    if declare -f deactivate > /dev/null
+    then
+        deactivate
+        echo
+        zle reset-prompt
+    else
+        echo -n "exit" && exit
+    fi
+}
+zle -N deactivate_or_exit
+
+setopt IGNORE_EOF
+bindkey '' deactivate_or_exit
+
 ################################################################
 # => Terminal Title Bar
 ################################################################
