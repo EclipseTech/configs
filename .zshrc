@@ -34,6 +34,7 @@ alias gb="git branch -vv"
 alias gba="git branch -vv -a"
 alias sz='exec zsh'
 alias ez='vim ~/.zshrc'
+alias ev='vim ~/.vimrc'
 function find-large-files() {
     find . -type f -size +10000k -exec ls -lh {} \; | awk '{ print $5 ":	" $9 }' | sort -h
 }
@@ -67,8 +68,8 @@ zstyle ':completion:*' completer _expand _force_rehash _complete _ignored
 zstyle ':completion:*' insert-unambiguous true
 # Colors for all completions
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# Case and dash/underscore insensitive, partial-word, and substring matching
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+# Case and dash/underscore insensitive, and partial-word matching
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'l:|=* r:|=*'
 zstyle ':completion:*' original true
 zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
 # Tab completion for kill and killall
