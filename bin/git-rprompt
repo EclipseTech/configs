@@ -4,28 +4,32 @@
 # TODO: show more useful information.  What else?
 # TODO: more color?
 
-if git rev-parse --git-dir > /dev/null 2>&1
-then
-        gst=`git status 2>/dev/null`
-        echo -n "["
+if git rev-parse --git-dir > /dev/null 2>&1; then
+    echo -n "["
+    gst=`git status 2>/dev/null`
+    if git rev-parse --abbrev-ref HEAD >/dev/null 2>&1; then
         git rev-parse --abbrev-ref HEAD | tr -d '\n'
-        num=`grep ahead <<< "$gst" | grep -o 'by [0-9]\+' | awk '{print $2}'`
-        if [ ! -z "$num" ] && [ "$num" -gt "0" ]; then
-                echo -n "+$num"
-        fi
-        num=`grep behind <<< "$gst" | grep -o 'by [0-9]\+' | awk '{print $2}'`
-        if [ ! -z "$num" ] && [ "$num" -gt "0" ]; then
-                echo -n "-$num"
-        fi
-        a=`grep different <<< "$gst"`
-        rc=$?
-        if [[ $rc == 0 ]] ; then
-                echo -n "?"
-        fi
-        a=`egrep "Changed but not updated|Changes to be committed|Untracked files|Changes not staged for commit" <<< "$gst"`
-        rc=$?
-        if [[ $rc == 0 ]] ; then
-                echo -n "*"
-        fi
-        echo -n "] "
+    else
+        # New repository with no commits
+        echo -n "HEAD"
+    fi
+    num=`grep ahead <<< "$gst" | grep -o 'by [0-9]\+' | awk '{print $2}'`
+    if [ ! -z "$num" ] && [ "$num" -gt "0" ]; then
+        echo -n "+$num"
+    fi
+    num=`grep behind <<< "$gst" | grep -o 'by [0-9]\+' | awk '{print $2}'`
+    if [ ! -z "$num" ] && [ "$num" -gt "0" ]; then
+        echo -n "-$num"
+    fi
+    a=`grep different <<< "$gst"`
+    rc=$?
+    if [[ $rc == 0 ]] ; then
+        echo -n "?"
+    fi
+    a=`egrep "Changed but not updated|Changes to be committed|Untracked files|Changes not staged for commit" <<< "$gst"`
+    rc=$?
+    if [[ $rc == 0 ]] ; then
+        echo -n "*"
+    fi
+    echo -n "] "
 fi
