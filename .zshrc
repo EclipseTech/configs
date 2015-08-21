@@ -35,6 +35,7 @@ alias gba="git branch -vv -a"
 alias sz='exec zsh'
 alias ez='vim ~/.zshrc'
 alias ev='vim ~/.vimrc'
+alias es='vim ~/.screenrc'
 function find-large-files() {
     find . -type f -size +10000k -exec ls -lh {} \; | awk '{ print $5 ":	" $9 }' | sort -h
 }

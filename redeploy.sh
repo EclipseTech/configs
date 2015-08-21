@@ -21,6 +21,7 @@ mkdir -p ~/bin
 ln -s ~/configs/bin/* ~/bin
 ln -s ~/configs/.gitconfig ~/
 ln -s ~/configs/.vimrc ~/
+ln -s ~/configs/.screenrc ~/
 ln -s ~/configs/.zshrc ~/
 ln -s ~/configs/.zshenv ~/
 
