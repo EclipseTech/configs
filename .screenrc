@@ -1,17 +1,20 @@
-########################################################################################
+####################################
 # General
-########################################################################################
+####################################
 # Use a larger default scrollback (default scrollback is 100)
 defscrollback 10000
 # enable SHIFT-PGUP / SHIFT-PGDOWN scroll
 termcapinfo xterm* ti@:te@
 setenv DISPLAY ':0'
 term screen-256color
+startup_message off
+# tab-completion flash off
+vbell off
 
 
-########################################################################################
+####################################
 # Keybinds
-########################################################################################
+####################################
 # rebind k ^K to K for kill
 bind k
 bind 
@@ -20,16 +23,20 @@ bind K kill
 bindkey "1" prev
 # change window with ctrl-right
 bindkey "2" next
+# resize keybinds
+bind + resize +1
+bind - resize -1
+bind = resize =
+bind _ resize max
 
 
-########################################################################################
+####################################
 # Status line
-########################################################################################
+####################################
 # An alternative hardstatus to display a bar at the bottom listing the
 # windownames and highlighting the current windowname in blue. (This is only
 # enabled if there is no hardstatus setting for your terminal)
 hardstatus on
 hardstatus alwayslastline
 hardstatus string "%{.kW}%-w%{.B}%n %t%{-}%{=b kw}%?%+w%? %=%c %d/%m/%Y" #B&W & date&time
-shelltitle "$ | zsh"
 rendition so '=h' 'wk'
