@@ -47,6 +47,7 @@
 # Cleans
     test-clean = clean -X -d -n
     do-clean = clean -X -d -f
+    oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | sed -ne \"s/^ //p\" | head -1' -
 [color "diff"]
     whitespace = red reverse
 [color "status"]
@@ -58,6 +59,6 @@
 [git-up "fetch"]
     all = true
 [push]
-        default = simple
+    default = simple
 [merge]
-	conflictstyle = diff3
+    conflictstyle = diff3

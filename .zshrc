@@ -100,6 +100,8 @@ compctl -K _pip_completion pip
 ################################################################
 # vi mode
 bindkey -v
+# disable vi normal mode on escape
+bindkey '^[' beep
 # home keybind
 bindkey '\e[1~' beginning-of-line
 # end keybind
@@ -146,6 +148,7 @@ zle -N deactivate_or_exit
 
 setopt IGNORE_EOF
 bindkey '' deactivate_or_exit
+
 
 ################################################################
 # => Terminal Title Bar
@@ -300,3 +303,56 @@ bindkey "^U" my-backward-kill-line
 bindkey "^Y" yank
 bindkey "^?" backward-delete-char # the default is vi-backward-delete-char, which actually fills the ^y buffer
 
+# Turn on proxy variables
+function proxy_on() {
+    no_proxy="localhost,127.0.0.0/8,::1,localaddress,.localdomain.com"
+    echo -n "no proxy: "; read noproxy
+    export no_proxy="$no_proxy,$noproxy"
+    export NO_PROXY=$no_proxy
+
+    if (( $# > 0 )); then
+        valid=$(echo $@ | sed -n 's/\([0-9]\{1,3\}.\)\{4\}:\([0-9]\+\)/&/p')
+        if [[ $valid != $@ ]]; then
+            >&2 echo "Invalid address"
+            return 1
+        fi
+
+        export http_proxy="http://$1/"
+        export https_proxy=$http_proxy
+        export ftp_proxy=$http_proxy
+        export rsync_proxy=$http_proxy
+        echo "Proxy environment variable set."
+        return 0
+    fi
+
+    echo -n "username: "; read username
+    if [[ $username != "" ]]; then
+        echo -n "password: "
+        read -es password
+        local pre="$username:$password@"
+    fi
+
+    echo -n "server: "; read server
+    echo -n "port: "; read port
+    export http_proxy="http://$pre$server:$port/"
+    export https_proxy=$http_proxy
+    export ftp_proxy=$http_proxy
+    export rsync_proxy=$http_proxy
+    export HTTP_PROXY=$http_proxy
+    export HTTPS_PROXY=$http_proxy
+    export FTP_PROXY=$http_proxy
+    export RSYNC_PROXY=$http_proxy
+}
+
+# Turn off proxy variables
+function proxy_off(){
+    unset http_proxy
+    unset HTTP_PROXY
+    unset https_proxy
+    unset HTTPS_PROXY
+    unset ftp_proxy
+    unset FTP_PROXY
+    unset rsync_proxy
+    unset RSYNC_PROXY
+    echo -e "Proxy environment variable removed."
+}

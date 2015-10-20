@@ -25,6 +25,17 @@ ln -s ~/configs/.screenrc ~/
 ln -s ~/configs/.zshrc ~/
 ln -s ~/configs/.zshenv ~/
 
+# setup ~/.ssh/config
+mkdir -p ~/.ssh/config
+cat <<-EOF >> ~/.ssh/config
+HashKnownHosts no
+
+#https://wiki.gentoo.org/wiki/SSH_jump_host
+Host *+*
+    ProxyCommand ssh $(echo %h | sed 's/+[^+]*$//;s/\([^+%%]*\)%%\([^+]*\)$/\2 -l \1/;s/:/ -p /') nc -w1 $(echo %h | sed 's/^.*+//;/:/!s/$/ %p/;s/:/ /')
+EOF
+
+
 chsh -s /bin/zsh
 exec zsh
 
