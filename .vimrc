@@ -16,10 +16,11 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     " Plugins
     Plugin 'bartman/git-wip'          " commit to git on save (git log wip/<branch>)
     Plugin 'bling/vim-airline'        " status line
+    Plugin 'chase/vim-ansible-yaml'   " highlighting/fixes indentation for Ansible's dialect of YAML
+    Plugin 'ctrlpvim/ctrlp.vim'       " ctrl+p to easy open files from current directory
     Plugin 'davidhalter/jedi-vim'     " Python autocompletion
     Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'} " Docker syntax
     Plugin 'ervandew/supertab'        " Tab completion
-    Plugin 'kien/ctrlp.vim'           " ctrl+p to easy open files from current directory
     Plugin 'nvie/vim-flake8'          " flake8 vim integration
     Plugin 'Raimondi/YAIFA'           " Yet Another Indent Finder, Almost
     Plugin 'rosenfeld/conque-term'    " Vim command line integration (ConqueTerm bash)
@@ -96,7 +97,7 @@ endif
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Sets how many lines of history VIM has to remember
-set history=100000
+set history=10000
 
 " Use an undo file
 set undofile

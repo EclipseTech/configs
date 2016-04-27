@@ -13,6 +13,13 @@ if [ -f ~/.zsh-colors ]; then . ~/.zsh-colors; fi
 PS1='%F{$LEFT_COLOR}%n@%m:%(!.#.$) %f'
 setopt prompt_subst
 RPROMPT='%F{$RIGHT_COLOR}$(git-rprompt)%~%f'
+# TODO make normal mode show (normal mode is currently disabled until this can be improved)
+#function zle-line-init zle-keymap-select {
+    #VIM_PROMPT="%{$fg_bold[yellow]%}[% N]% %{$reset_color%}"
+    #PS1="%F{$LEFT_COLOR}%n@%m:${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/}%(!.#.$)%f $EPS1"
+    #zle reset-prompt
+#}
+
 
 ################################################################
 # => Aliases
@@ -55,6 +62,8 @@ alias -g ..5="../../../../.."
 ################################################################
 # => Auto Completion
 ################################################################
+# Add local ~/.zsh/completion loading
+fpath=(~/.zsh/completion $fpath)
 # Enable zsh completion
 autoload -Uz compinit
 compinit
@@ -248,29 +257,29 @@ function chpwd() { ls }
 # Disable ^s scroll locking
 stty -ixon -ixoff -ixany
 
-# Make ^r work even in the middle of a line
-autoload -Uz narrow-to-region
-function _history-incremental-preserving-pattern-search-backward
-{
-    local state
-    MARK=CURSOR  # magick, else multiple ^R don't work
-    narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
-    zle end-of-history
-    zle history-incremental-pattern-search-backward
-    narrow-to-region -R state
-}
-zle -N _history-incremental-preserving-pattern-search-backward
-bindkey "^R" _history-incremental-preserving-pattern-search-backward
-bindkey -M isearch "^R" history-incremental-pattern-search-backward
-bindkey "^S" history-incremental-pattern-search-forward
+# Make ^R (ctrl+R) work even in the middle of a line
+#autoload -Uz narrow-to-region
+#function _history-incremental-preserving-pattern-search-backward
+#{
+    #local state
+    #MARK=CURSOR  # magick, else multiple ^R don't work
+    #narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
+    #zle end-of-history
+    #zle history-incremental-pattern-search-backward
+    #narrow-to-region -R state
+#}
+#zle -N _history-incremental-preserving-pattern-search-backward
+#bindkey "^R" _history-incremental-preserving-pattern-search-backward
+#bindkey -M isearch "^R" history-incremental-pattern-search-backward
+#bindkey "^S" history-incremental-pattern-search-forward
 
 # up/down arrows search history based on beginning of line
-autoload -U up-line-or-beginning-search
-autoload -U down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-bindkey "^[[A" up-line-or-beginning-search
-bindkey "^[[B" down-line-or-beginning-search
+#autoload -U up-line-or-beginning-search
+#autoload -U down-line-or-beginning-search
+#zle -N up-line-or-beginning-search
+#zle -N down-line-or-beginning-search
+#bindkey "^[[A" up-line-or-beginning-search
+#bindkey "^[[B" down-line-or-beginning-search
 
 # Make ^A and ^X increase and decrease the nearest number to left of cursor
 _increase_number() {
