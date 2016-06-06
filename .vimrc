@@ -5,7 +5,7 @@
 set nocompatible "required by vundle
 " Automatically setup vundle if possible
 if executable('git') && !isdirectory(expand("~/.vim/bundle/Vundle.vim"))
-    silent !git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/Vundle.vim
+    silent !git clone git@github.com:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     let s:setupvundle=1
 endif
 if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
@@ -16,13 +16,11 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     " Plugins
     Plugin 'bartman/git-wip'          " commit to git on save (git log wip/<branch>)
     Plugin 'bling/vim-airline'        " status line
-    Plugin 'chase/vim-ansible-yaml'   " highlighting/fixes indentation for Ansible's dialect of YAML
     Plugin 'ctrlpvim/ctrlp.vim'       " ctrl+p to easy open files from current directory
     Plugin 'davidhalter/jedi-vim'     " Python autocompletion
     Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'} " Docker syntax
     Plugin 'ervandew/supertab'        " Tab completion
     Plugin 'nvie/vim-flake8'          " flake8 vim integration
-    Plugin 'Raimondi/YAIFA'           " Yet Another Indent Finder, Almost
     Plugin 'rosenfeld/conque-term'    " Vim command line integration (ConqueTerm bash)
     Plugin 'scrooloose/nerdcommenter' " Easy commenting
     Plugin 'scrooloose/nerdtree'      " Filesystem browser
@@ -79,6 +77,16 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
       let g:airline_symbols = {}
     endif
     let g:airline_symbols.space = "\ua0"
+    " unicode symbols
+    let g:airline_left_sep = '»'
+    let g:airline_left_sep = '▶'
+    let g:airline_right_sep = '«'
+    let g:airline_right_sep = '◀'
+    let g:airline_symbols.linenr = '¶'
+    let g:airline_symbols.paste = 'ρ'
+    let g:airline_symbols.paste = 'Þ'
+    let g:airline_symbols.paste = '∥'
+    let g:airline_symbols.whitespace = 'Ξ'
 
     " syntastic
     let g:syntastic_python_checkers=['flake8', 'python']
@@ -271,6 +279,14 @@ nnoremap <Leader>fs :call FixWS()<LF>
 
 " xmllint formatting options for xml filetypes
 autocmd FileType xml exe "let &l:equalprg='xmllint --format -'"
+
+" Move line up/down with CTRL+up/down arrows
+nnoremap <C-Down> :m .+1<CR>==
+nnoremap <C-Up> :m .-2<CR>==
+inoremap <C-Down> <Esc>:m .+1<CR>==gi
+inoremap <C-Up> <Esc>:m .-2<CR>==gi
+vnoremap <C-Down> :m '>+1<CR>gv=gv
+vnoremap <C-Up> :m '<-2<CR>gv=gv
 
 " Show eol whitespace in red
 :autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red

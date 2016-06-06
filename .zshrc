@@ -257,30 +257,6 @@ function chpwd() { ls }
 # Disable ^s scroll locking
 stty -ixon -ixoff -ixany
 
-# Make ^R (ctrl+R) work even in the middle of a line
-#autoload -Uz narrow-to-region
-#function _history-incremental-preserving-pattern-search-backward
-#{
-    #local state
-    #MARK=CURSOR  # magick, else multiple ^R don't work
-    #narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
-    #zle end-of-history
-    #zle history-incremental-pattern-search-backward
-    #narrow-to-region -R state
-#}
-#zle -N _history-incremental-preserving-pattern-search-backward
-#bindkey "^R" _history-incremental-preserving-pattern-search-backward
-#bindkey -M isearch "^R" history-incremental-pattern-search-backward
-#bindkey "^S" history-incremental-pattern-search-forward
-
-# up/down arrows search history based on beginning of line
-#autoload -U up-line-or-beginning-search
-#autoload -U down-line-or-beginning-search
-#zle -N up-line-or-beginning-search
-#zle -N down-line-or-beginning-search
-#bindkey "^[[A" up-line-or-beginning-search
-#bindkey "^[[B" down-line-or-beginning-search
-
 # Make ^A and ^X increase and decrease the nearest number to left of cursor
 _increase_number() {
     local -a match mbegin mend
@@ -313,6 +289,7 @@ bindkey "^Y" yank
 bindkey "^?" backward-delete-char # the default is vi-backward-delete-char, which actually fills the ^y buffer
 
 # Turn on proxy variables
+#TODO this doesn't seem to work
 function proxy_on() {
     no_proxy="localhost,127.0.0.0/8,::1,localaddress,.localdomain.com"
     echo -n "no proxy: "; read noproxy

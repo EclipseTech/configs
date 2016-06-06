@@ -2,7 +2,7 @@
     autosetuprebase = always
 [user]
     name = Jef Mallal
-    email = jef.mallal@hp.com
+    email = jef.mallal@hpe.com
 [color]
     ui = auto
     diff = auto
