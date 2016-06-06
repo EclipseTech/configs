@@ -108,12 +108,14 @@ endif
 set history=10000
 
 " Use an undo file
-set undofile
-" Set a directory to store the undo history
-if !isdirectory(expand("~/.vim/undo/"))
-    silent !mkdir -p ~/.vim/undo/ >/dev/null 2>&1
+if has("persistent_undo")
+    set undofile
+    " Set a directory to store the undo history
+    if !isdirectory(expand("~/.vim/undo/"))
+        silent !mkdir -p ~/.vim/undo/ >/dev/null 2>&1
+    endif
+    set undodir=~/.vim/undo/
 endif
-set undodir=~/.vim/undo/
 
 " Don't try to be compatible with vi
 set nocompatible
@@ -255,7 +257,12 @@ set backspace=indent,eol,start
 " => Formatting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set default format options
-autocmd FileType * setlocal formatoptions=tcqlnj
+"    t Auto-wrap text using textwidth
+"    c Auto-wrap comments using textwidth, inserting the current comment
+"    q Allow formatting of comments with "gq". (Might not need/want this)
+"    l Long lines are not broken in insert mode
+"    n When formatting text, recognize numbered lists
+autocmd FileType * setlocal formatoptions=tcqln
 " Formatting turn off automatic comment on o, O and enter
 autocmd FileType * setlocal formatoptions-=ro
 
