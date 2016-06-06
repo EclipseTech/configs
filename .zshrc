@@ -7,7 +7,7 @@ autoload -U promptinit
 promptinit
 # For valid color values
 # run http://www.vim.org/scripts/script.php?script_id=1349
-LEFT_COLOR='light-green'
+LEFT_COLOR='white'
 RIGHT_COLOR='green'
 if [ -f ~/.zsh-colors ]; then . ~/.zsh-colors; fi
 PS1='%F{$LEFT_COLOR}%n@%m:%(!.#.$) %f'
