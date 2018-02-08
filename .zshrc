@@ -20,6 +20,10 @@ RPROMPT='%F{$RIGHT_COLOR}$(git-rprompt)%~%f'
     #zle reset-prompt
 #}
 
+################################################################
+# => Colored output
+################################################################
+exec 2>>( while read X; do print "\e[91m${X}\e[0m" > /dev/tty; done & )
 
 ################################################################
 # => Aliases
@@ -103,6 +107,8 @@ function _pip_completion {
 }
 compctl -K _pip_completion pip
 # pip zsh completion end
+# jenkins-jobs autocompletion
+compdef _gnu_generic jenkins-jobs
 
 ################################################################
 # => Keybinds
@@ -205,9 +211,18 @@ export PATH=$PATH:~/git-scripts:~/bin
 export PIP_DOWNLOAD_CACHE=~/.pip_download_cache
 # Set up dir colors for ls and zsh tab completion
 eval $(dircolors -b)
+# Share command history between shells
+export PROMPT_COMMAND='history -a; $PROMPT_COMMAND'
 HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=10000
+export HISTFILESIZE=100000
+export HISTSIZE=100000
+export SAVEHIST=100000
+setopt APPEND_HISTORY # Don't erase history
+setopt EXTENDED_HISTORY # Add additional data to history like timestamp
+setopt INC_APPEND_HISTORY # Add immediately
+setopt HIST_FIND_NO_DUPS # Don't show duplicates in search
+setopt NO_HIST_BEEP # Don't beep
+setopt SHARE_HISTORY # Share history between session/terminals
 # Set default editor
 export EDITOR="vi"
 setopt extendedglob

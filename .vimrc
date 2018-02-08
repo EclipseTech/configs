@@ -4,11 +4,11 @@
 " Vundle (vim set-up to work without vundle installed)
 set nocompatible "required by vundle
 " Automatically setup vundle if possible
-if executable('git') && !isdirectory(expand("~/.vim/bundle/Vundle.vim"))
+if executable('git') && empty(glob("~/.vim/bundle/Vundle.vim"))
     silent !git clone git@github.com:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     let s:setupvundle=1
 endif
-if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
+if !empty(glob("~/.vim/bundle/Vundle.vim"))
     set rtp+=~/.vim/bundle/Vundle.vim/
     filetype off "off reqiured by Vundle
     call vundle#begin()
@@ -48,8 +48,8 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
 " => Plugin settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " plugin mappings
-    nmap <F6> :SyntasticToggleMode<LF>
-    nmap <F5> :NERDTreeToggle<LF>
+    nnoremap <F6> :SyntasticToggleMode<LF>
+    nnoremap <F5> :NERDTreeToggle<LF>
     let jedi#goto_assignments_command = "<F3>"
     let g:jedi#goto_definitions_command = "<F4>"
 
@@ -88,7 +88,7 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     let g:airline_symbols.paste = '∥'
     let g:airline_symbols.whitespace = 'Ξ'
 
-    " syntastic
+    " syntastic python
     let g:syntastic_python_checkers=['flake8', 'python']
     let g:syntastic_mode_map = { 'mode': 'passive',
                                \ 'active_filetypes': [],
@@ -99,6 +99,11 @@ if isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     " E225 missing whitespace around operator
     " E226 missing whitespace around arithmetic operator
     let g:syntastic_python_flake8_args = '--ignore="E225,E226,E501"'
+    " syntastic YAML
+    let g:syntastic_yaml_checkers = ['yamllint']
+    let g:syntastic_yaml_yamllint_args = '-c ~/.config/yamllint/config'
+    " show number of buffers
+    let g:airline#extensions#tabline#buffer_nr_show = 1
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -144,6 +149,8 @@ let maplocalleader='\'
 " Yanks go on clipboard if vim compiled with +clipboard
 set clipboard+=unnamed
 set clipboard+=unnamedplus
+" Hack for ubuntu 16.04 loading slowly without this
+set clipboard=exclude:.*
 
 " Open new split below or vsplit right
 "set splitbelow "temporarily off due to jedi or supertab plugin issue
@@ -169,11 +176,14 @@ set mouse=n
 " => Abbreviations
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 iab shebash #!/bin/bash
+iab shebashe #!/bin/bash -e
+iab shebashx #!/bin/bash -x
+iab shebashex #!/bin/bash -ex
 iab [bash] #!/usr/bin/env bash
 iab shepython #!/usr/bin/python
+iab shepy #!/usr/bin/python
 iab [python] #!/usr/bin/env python
 iab #t <C-V><C-I>
-iab teh the
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Navigation
@@ -182,8 +192,8 @@ iab teh the
 set virtualedit=all
 
 " Buffer navigation alt+1 previous alt+2 next
-nmap <esc>1 :N<CR>
-nmap <esc>2 :n<CR>
+nnoremap <esc>1 :N<CR>
+nnoremap <esc>2 :n<CR>
 
 " Prevent escape from moving the cursor one character to the left
 "  required for backward/forward ctrl+left/right consistancy
@@ -227,11 +237,13 @@ set t_Co=256
 " Popup menu colors
 highlight Pmenu ctermfg=2 gui=bold
 highlight Pmenu ctermbg=238 gui=bold
-" Paren matching colors
-highlight MatchParen cterm=underline ctermbg=white ctermfg=magenta
+" Paren matching colors {}
+highlight MatchParen cterm=underline ctermfg=black ctermbg=146
 " Enable syntax highlighting
 syntax enable
 syntax on
+highlight Search cterm=NONE ctermfg=black ctermbg=40
+" Spelling error highlighting
 highlight SpellBad cterm=underline ctermfg=darkred ctermbg=None
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -249,6 +261,9 @@ set tabstop=4
 " Better indentation
 set autoindent
 set smartindent
+set cindent
+set cinkeys-=0#
+set indentkeys-=0#
 " Wrap lines
 set wrap
 set backspace=indent,eol,start
@@ -301,7 +316,7 @@ vnoremap <C-Up> :m '<-2<CR>gv=gv
 :match ExtraWhitespace /\s\+$/
 
 " Show tabs and trailing whitespace
-set listchars=tab:⇒-,trail:·,    "⇒ ▸
+set listchars=tab:⇒-,trail:·,    "⇒ ▸ "eol:¬,space:␣
 set list
 
 " Ignore case when searching

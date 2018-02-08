@@ -32,8 +32,8 @@
 # Will start a repo in this directory
     this = !git init && git add -A && git commit -m \"initial commit\"
 # ignore/unignore file without .gitignore
-    assume   = update-index --assume-unchanged
-    assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
+    assume-unchanged = update-index --assume-unchanged
+    assumeall = "!git ls-files --modified | xargs git assume"
     unassume = update-index --no-assume-unchanged
     unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
 # list ignored files
