@@ -142,6 +142,11 @@ bindkey "[1;5C" vi-forward-word
 # ctrl+delete delete word forward from cursor
 bindkey '[3;5~' kill-word
 bindkey "" history-incremental-search-backward
+# ctrl+x+e edit in command line buffer
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^xe' edit-command-line
+bindkey '^x^e' edit-command-line
 # Get args from previous commands with alt-. and alt-m
 autoload -Uz copy-earlier-word
 zle -N copy-earlier-word
@@ -202,12 +207,28 @@ function preexec() {
 ################################################################
 # Max tab completion before asking are you sure question.
 LISTMAX=200
+# Use zsh-autosuggestions
+if [[ -d "/home/$USER/.zsh/zsh-autosuggestions/" ]]; then
+    source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+    export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=50
+    bindkey '^ ' autosuggest-accept
+fi
 # Set timezone
 export TZ='America/Denver'
 # Turn on unicode support
 export LANG="en_US.UTF-8"
 # Add ~/git-scripts and ~/bin to path
 export PATH=$PATH:~/git-scripts:~/bin
+# Add mvn to path
+if [[ -d "/usr/local/maven/" ]]; then
+    export M2_HOME=/usr/local/maven
+    export M2=$M2_HOME/bin
+    export PATH=$PATH:$M2
+fi
+if [[ -d "/usr/bin/java/" ]]; then
+    export JAVA_HOME=/usr/bin/java
+    export PATH=$PATH:$JAVA_HOME/bin
+fi
 export PIP_DOWNLOAD_CACHE=~/.pip_download_cache
 # Set up dir colors for ls and zsh tab completion
 eval $(dircolors -b)
@@ -224,7 +245,7 @@ setopt HIST_FIND_NO_DUPS # Don't show duplicates in search
 setopt NO_HIST_BEEP # Don't beep
 setopt SHARE_HISTORY # Share history between session/terminals
 # Set default editor
-export EDITOR="vi"
+export EDITOR="vim"
 setopt extendedglob
 setopt dotglob
 # Tab once = list options, again start completing options

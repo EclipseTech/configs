@@ -2,10 +2,16 @@
 
 # wget this script from github
 
-# Debian
-sudo apt-get update
-sudo apt-get install -y zsh zsh-doc git vim ruby ruby-dev make python-pip dos2unix curl inotify-tools
-sudo gem install git-up
+DISTRO=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
+if [[ "$DISTRO" == '"Ubuntu"' ]]; then
+    # Debian
+    sudo apt-get update
+    sudo apt-get install -y zsh zsh-doc git vim ruby ruby-dev make python-pip dos2unix curl inotify-tools
+    # TODO change to python git-up and stop installing ruby
+    sudo gem install git-up
+elif [[ "$DISTRO" == '"CentOS Linux"' ]]; then
+    echo "Not yet implemented"
+fi
 
 mkdir ~/.ssh
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa

@@ -146,11 +146,13 @@ set magic
 let mapleader=','
 let maplocalleader='\'
 
-" Yanks go on clipboard if vim compiled with +clipboard
-set clipboard+=unnamed
-set clipboard+=unnamedplus
-" Hack for ubuntu 16.04 loading slowly without this
-set clipboard=exclude:.*
+if has('clipboard')
+    " Yanks go on clipboard if vim compiled with +clipboard
+    set clipboard+=unnamed
+    set clipboard+=unnamedplus
+    " Hack for ubuntu 16.04 loading slowly without this
+    set clipboard=exclude:.*
+endif
 
 " Open new split below or vsplit right
 "set splitbelow "temporarily off due to jedi or supertab plugin issue
