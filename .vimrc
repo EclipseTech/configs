@@ -12,7 +12,7 @@ if !empty(glob("~/.vim/bundle/Vundle.vim"))
     set rtp+=~/.vim/bundle/Vundle.vim/
     filetype off "off reqiured by Vundle
     call vundle#begin()
-    Plugin 'gmarik/vundle'
+    Plugin 'VundleVim/Vundle.vim'
     " Plugins
     Plugin 'bling/vim-airline'        " status line
     Plugin 'ctrlpvim/ctrlp.vim'       " ctrl+p to easy open files from current directory
