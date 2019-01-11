@@ -22,6 +22,8 @@ if !empty(glob("~/.vim/bundle/Vundle.vim"))
     Plugin 'scrooloose/nerdcommenter' " Easy commenting
     Plugin 'scrooloose/nerdtree'      " Filesystem browser
     Plugin 'tpope/vim-fugitive'       " Vim git wrapper
+    Plugin 'tpope/vim-repeat'         " Use . to repeat in plugin context (needed for vim-surround)
+    Plugin 'tpope/vim-surround'       " Surround sections in parens, brackets, quotes, XML tags, and more (example: cs'] changes '' for [])
     " Syntax
     Plugin 'chase/vim-ansible-yaml'   " yaml syntax highlighting
     Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'} " Docker syntax
