@@ -5,7 +5,7 @@
 set nocompatible "required by vundle
 " Automatically setup vundle if possible
 if executable('git') && empty(glob("~/.vim/bundle/Vundle.vim"))
-    silent !git clone git@github.com:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    silent !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     let s:setupvundle=1
 endif
 if !empty(glob("~/.vim/bundle/Vundle.vim"))
@@ -14,26 +14,18 @@ if !empty(glob("~/.vim/bundle/Vundle.vim"))
     call vundle#begin()
     Plugin 'gmarik/vundle'
     " Plugins
-    Plugin 'bartman/git-wip'          " commit to git on save (git log wip/<branch>)
     Plugin 'bling/vim-airline'        " status line
     Plugin 'ctrlpvim/ctrlp.vim'       " ctrl+p to easy open files from current directory
     Plugin 'davidhalter/jedi-vim'     " Python autocompletion
-    Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'} " Docker syntax
     Plugin 'ervandew/supertab'        " Tab completion
     Plugin 'nvie/vim-flake8'          " flake8 vim integration
-    Plugin 'rosenfeld/conque-term'    " Vim command line integration (ConqueTerm bash)
     Plugin 'scrooloose/nerdcommenter' " Easy commenting
     Plugin 'scrooloose/nerdtree'      " Filesystem browser
-    Plugin 'scrooloose/syntastic'     " Syntax checking
     Plugin 'tpope/vim-fugitive'       " Vim git wrapper
-    Plugin 'tpope/vim-repeat'         " Use . to repeat in plugin context (needed for vim-surround)
-    Plugin 'tpope/vim-surround'       " Surround sections in parens, brackets, quotes, XML tags, and more
-    " Colors
-    Plugin 'altercation/vim-colors-solarized'
-    Plugin 'desert256.vim'
-    Plugin 'Lokaltog/vim-distinguished'
-    Plugin 'nanotech/jellybeans.vim'
-    Plugin 'tpope/vim-vividchalk'
+    " Syntax
+    Plugin 'chase/vim-ansible-yaml'   " yaml syntax highlighting
+    Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'} " Docker syntax
+    Plugin 'scrooloose/syntastic'     " Syntax checking
     call vundle#end()
     filetype plugin indent on
     " This automatically installs plugins on first time vundle setup
@@ -50,17 +42,14 @@ if !empty(glob("~/.vim/bundle/Vundle.vim"))
     " plugin mappings
     nnoremap <F6> :SyntasticToggleMode<LF>
     nnoremap <F5> :NERDTreeToggle<LF>
-    let jedi#goto_assignments_command = "<F3>"
-    let g:jedi#goto_definitions_command = "<F4>"
 
     " Jedi plugin
+    let jedi#goto_assignments_command = "<F3>"
+    let g:jedi#goto_definitions_command = "<F4>"
     let g:jedi#auto_initialization = 1      " Auto init jedi
     let g:jedi#popup_on_dot = 1             " Popup on .
     "let g:jedi#popup_select_first = 0       " Don't select first popup
     let g:jedi#rename_command = "<leader>r" " Rename = ,r
-
-    " git-wip plugin
-    so ~/.vim/bundle/git-wip/vim/plugin/git-wip.vim
 
     " SuperTab
     let g:SuperTabDefaultCompletionType = "<c-n>"
@@ -89,7 +78,7 @@ if !empty(glob("~/.vim/bundle/Vundle.vim"))
     let g:airline_symbols.whitespace = 'Ξ'
 
     " syntastic python
-    let g:syntastic_python_checkers=['flake8', 'python']
+    let g:syntastic_python_checkers=['flake8', 'python', 'pep8']
     let g:syntastic_mode_map = { 'mode': 'passive',
                                \ 'active_filetypes': [],
                                \ 'passive_filetypes': [] }
