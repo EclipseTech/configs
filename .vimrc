@@ -16,7 +16,7 @@ if !empty(glob("~/.vim/bundle/Vundle.vim"))
     " Plugins
     Plugin 'bling/vim-airline'        " status line
     Plugin 'ctrlpvim/ctrlp.vim'       " ctrl+p to easy open files from current directory
-    Plugin 'davidhalter/jedi-vim'     " Python autocompletion
+    "Plugin 'davidhalter/jedi-vim'     " Python autocompletion
     Plugin 'ervandew/supertab'        " Tab completion
     Plugin 'nvie/vim-flake8'          " flake8 vim integration
     Plugin 'scrooloose/nerdcommenter' " Easy commenting
@@ -250,6 +250,7 @@ set smarttab
 " 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4
+set softtabstop=4
 
 " Better indentation
 set autoindent
@@ -260,6 +261,9 @@ set indentkeys-=0#
 " Wrap lines
 set wrap
 set backspace=indent,eol,start
+
+" yaml indentation
+autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Formatting
@@ -283,11 +287,12 @@ func! FixWS()
   retab
 endfunc
 " Auto-fix whitespace on these extensions
-autocmd BufWrite *.py :call FixWS()
-autocmd BufWrite *.xml :call FixWS()
-autocmd BufWrite *.java :call FixWS()
-autocmd BufWrite *.js :call FixWS()
-autocmd BufWrite *.coffee :call FixWS()
+"autocmd BufWrite *.py :call FixWS()
+"autocmd BufWrite *.xml :call FixWS()
+"autocmd BufWrite *.java :call FixWS()
+"autocmd BufWrite *.js :call FixWS()
+"autocmd BufWrite *.coffee :call FixWS()
+"autocmd BufWrite *.yaml :call FixWS()
 " ,fs to fix whitespace on other extensions
 nnoremap <Leader>fs :call FixWS()<LF>
 "autocmd BufWrite *.* :call FixWS()

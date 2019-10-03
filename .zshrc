@@ -207,7 +207,7 @@ function preexec() {
 ################################################################
 # Max tab completion before asking are you sure question.
 LISTMAX=200
-# Use zsh-autosuggestions
+# Use zsh-autosuggestions ctrl+space
 if [[ -d "/home/$USER/.zsh/zsh-autosuggestions/" ]]; then
     source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
     export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=50
@@ -378,3 +378,6 @@ function proxy_off(){
     unset RSYNC_PROXY
     echo -e "Proxy environment variable removed."
 }
+
+# kubectl kubernetes k8s completion
+if [ $commands[kubectl] ]; then source <(kubectl completion zsh); fi
