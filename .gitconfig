@@ -1,8 +1,8 @@
 [branch]
     autosetuprebase = always
-[user]
-    name = Jef Mallal
-    email = jef.mallal@hpe.com
+#[user]
+#    name = Jef Shaw Mallal
+#    email = 
 [color]
     ui = auto
     diff = auto
