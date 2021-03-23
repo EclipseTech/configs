@@ -47,6 +47,7 @@
     shallow = clone --depth 1
 # Cleans
     test-clean = clean -X -d -n
+    show-clean = clean -X -d -n
     do-clean = clean -X -d -f
     do-reset-clean = clean -x -d -f
     oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | sed -ne \"s/^ //p\" | head -1' -

@@ -218,7 +218,7 @@ export TZ='America/Denver'
 # Turn on unicode support
 export LANG="en_US.UTF-8"
 # Add ~/git-scripts and ~/bin to path
-export PATH=$PATH:~/git-scripts:~/bin
+export PATH=$PATH:~/git-scripts:~/bin:~/go/bin
 # Add mvn to path
 if [[ -d "/usr/local/maven/" ]]; then
     export M2_HOME=/usr/local/maven
