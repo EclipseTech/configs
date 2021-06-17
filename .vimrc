@@ -10,7 +10,7 @@ if executable('git') && empty(glob("~/.vim/bundle/Vundle.vim"))
 endif
 if !empty(glob("~/.vim/bundle/Vundle.vim"))
     set rtp+=~/.vim/bundle/Vundle.vim/
-    filetype off "off reqiured by Vundle
+    filetype off "off required by Vundle
     call vundle#begin()
     Plugin 'VundleVim/Vundle.vim'
     " Plugins
@@ -304,6 +304,9 @@ endfunc
 " ,fs to fix whitespace on other extensions
 nnoremap <Leader>fs :call FixWS()<LF>
 "autocmd BufWrite *.* :call FixWS()
+
+" toggle line numbers
+nnoremap <Leader>n :set number!<LF>
 
 " xmllint formatting options for xml filetypes
 autocmd FileType xml exe "let &l:equalprg='xmllint --format -'"
