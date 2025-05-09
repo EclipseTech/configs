@@ -28,13 +28,14 @@
     lgn = !git lg --name-only
     lgs = !git lg --stat
     logn = log --name-only
+    log1 = log -n1
 #Show tracked files
     tracked = git ls-files
 # Will start a repo in this directory
     this = !git init && git add -A && git commit -m \"initial commit\"
 # ignore/unignore file without .gitignore
     assume-unchanged = update-index --assume-unchanged
-    assumeall = "!git ls-files --modified | xargs git assume"
+    assumeall = "!git ls-files --modified | xargs git assume-unchanged"
     unassume = update-index --no-assume-unchanged
     unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
 # list ignored files
@@ -51,6 +52,7 @@
     do-clean = clean -X -d -f
     do-reset-clean = clean -x -d -f
     oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | sed -ne \"s/^ //p\" | head -1' -
+    squash = "!f() { git reset --soft HEAD~\"$1\" && git commit ;}; f"
 [color "diff"]
     whitespace = red reverse
 [color "status"]
@@ -67,3 +69,6 @@
     conflictstyle = diff3
 [init]
     defaultBranch = main
+[pager]
+    log1 = false
+    branch = false

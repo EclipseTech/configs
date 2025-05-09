@@ -14,20 +14,22 @@ if !empty(glob("~/.vim/bundle/Vundle.vim"))
     call vundle#begin()
     Plugin 'VundleVim/Vundle.vim'
     " Plugins
-    Plugin 'bling/vim-airline'        " status line
-    Plugin 'ctrlpvim/ctrlp.vim'       " ctrl+p to easy open files from current directory
-    "Plugin 'davidhalter/jedi-vim'     " Python autocompletion
-    Plugin 'ervandew/supertab'        " Tab completion
-    Plugin 'nvie/vim-flake8'          " flake8 vim integration
-    Plugin 'scrooloose/nerdcommenter' " Easy commenting
-    Plugin 'scrooloose/nerdtree'      " Filesystem browser
-    Plugin 'tpope/vim-fugitive'       " Vim git wrapper
-    Plugin 'tpope/vim-repeat'         " Use . to repeat in plugin context (needed for vim-surround)
-    Plugin 'tpope/vim-surround'       " Surround sections in parens, brackets, quotes, XML tags, and more (example: cs'] changes '' for [])
+    Plugin 'bling/vim-airline'             " status line
+    Plugin 'ctrlpvim/ctrlp.vim'            " ctrl+p to easy open files from current directory
+    "Plugin 'davidhalter/jedi-vim'          " Python autocompletion
+    Plugin 'editorconfig/editorconfig-vim' " https://editorconfig.org
+    Plugin 'ervandew/supertab'             " Tab completion
+    Plugin 'nvie/vim-flake8'               " flake8 vim integration
+    Plugin 'scrooloose/nerdcommenter'      " Easy commenting
+    Plugin 'scrooloose/nerdtree'           " Filesystem browser
+    Plugin 'tpope/vim-fugitive'            " Vim git wrapper
+    Plugin 'tpope/vim-repeat'              " Use . to repeat in plugin context (needed for vim-surround)
+    Plugin 'tpope/vim-surround'            " Surround sections in parens, brackets, quotes, XML tags, and more (example: cs'] changes '' for [])
     " Syntax
-    Plugin 'chase/vim-ansible-yaml'   " yaml syntax highlighting
+    Plugin 'chase/vim-ansible-yaml'        " yaml syntax highlighting
     Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'} " Docker syntax
-    Plugin 'scrooloose/syntastic'     " Syntax checking
+    Plugin 'junegunn/limelight.vim'
+    Plugin 'scrooloose/syntastic'          " Syntax checking
     call vundle#end()
     filetype plugin indent on
     " This automatically installs plugins on first time vundle setup
@@ -250,15 +252,14 @@ highlight SpellBad cterm=underline ctermfg=darkred ctermbg=None
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 1 tab == 4 spaces
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 " Use spaces instead of tabs
 set expandtab
 " Be smart when using tabs
 set smarttab
-
-" 1 tab == 4 spaces
-set shiftwidth=4
-set tabstop=4
-set softtabstop=4
 
 " Better indentation
 set autoindent
@@ -307,6 +308,9 @@ nnoremap <Leader>fs :call FixWS()<LF>
 
 " toggle line numbers
 nnoremap <Leader>n :set number!<LF>
+
+" toggle highlighting
+nnoremap <Leader>h :noh<LF>
 
 " xmllint formatting options for xml filetypes
 autocmd FileType xml exe "let &l:equalprg='xmllint --format -'"
