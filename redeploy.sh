@@ -19,14 +19,19 @@ ln -s ~/configs/bin/* ~/bin
 ln -s ~/configs/.gitconfig ~/
 ln -s ~/configs/.vimrc ~/
 ln -s ~/configs/.screenrc ~/
-#ln -s ~/configs/.zshrc ~/
-#ln -s ~/configs/.zshenv ~/
 set -x
 
 chsh -s $(which zsh)
-exec zsh
 # Get oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+rm ~/.zshrc
+ln -s ~/configs/.zshrc ~/
+ln -s ~/configs/.zshenv ~/
+ln -s ~/configs/.oh-my-zsh/themes/me.zsh-theme ~/.oh-my-zsh/themes/
+ln -s ~/configs/.oh-my-zsh/themes/my.zsh-theme ~/.oh-my-zsh/themes/
 
 # install vim plugins
 vim '+exit'
+
+exec zsh
+
