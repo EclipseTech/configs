@@ -99,6 +99,7 @@
     });
 
     function init() {
+        setStickyOffset();
         const out = document.getElementById('out');
         if (!out) return;
         buildCollapsibles(out);
@@ -185,12 +186,15 @@
         style.id = 'jk-collapse-style';
         style.textContent = `
             .jk-stage-header {
+                position: sticky;
+                top: var(--jk-sticky-top, 0);
+                z-index: 100;
                 display: flex;
                 align-items: center;
                 gap: 6px;
                 cursor: pointer;
                 user-select: none;
-                background: rgba(100,100,200,0.08);
+                background: #2a2a4e;
                 border-left: 3px solid #6666cc;
                 padding: 2px 6px;
                 margin: 4px 0 2px;
@@ -199,7 +203,7 @@
                 font-weight: bold;
                 color: #aaaaff;
             }
-            .jk-stage-header:hover { background: rgba(100,100,200,0.16); }
+            .jk-stage-header:hover { background: #aaaaff; color: #2a2a4e; }
             .jk-stage-arrow { font-size: 10px; transition: transform 0.15s; display: inline-block; }
             .jk-stage-arrow.collapsed { transform: rotate(-90deg); }
             .jk-stage-body.collapsed { display: none; }
@@ -214,6 +218,13 @@
             debounce = setTimeout(() => buildCollapsibles(out), 500);
         });
         observer.observe(out, { childList: true, subtree: true });
+    }
+
+    function setStickyOffset() {
+        const jenkinsHeader = document.querySelector('.jenkins-header');
+        if (!jenkinsHeader) return;
+        const height = jenkinsHeader.getBoundingClientRect().height;
+        document.documentElement.style.setProperty('--jk-sticky-top', `${height}px`);
     }
 
     let attempts = 0;
