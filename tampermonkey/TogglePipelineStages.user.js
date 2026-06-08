@@ -3,7 +3,7 @@
 // @namespace    EclipseTech
 // @version      2.4
 // @description  Show/hide pipeline-new-node class
-// @match        <jenkins-url>.com/*/console
+// @match        <jenkins-url>/*/console
 // @run-at       document-end
 // ==/UserScript==
 

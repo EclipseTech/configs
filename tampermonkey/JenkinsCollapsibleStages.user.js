@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         JenkinsCollapsibleStages
 // @namespace    EclipseTech
-// @version      1.5
+// @version      2.2
 // @description  Collapse/expand pipeline stages in Jenkins console output by stage label
-// @match        <jenkins-url>.com/*/console
+// @match        <jenkins-url>/*/console
 // @run-at       document-end
 // ==/UserScript==
 
@@ -98,12 +98,45 @@
         });
     });
 
+    function isBuildComplete() {
+        const spinner = document.getElementById('spinner');
+        // Job complete when spinner display is changed to none
+        return spinner && spinner.style.display === 'none';
+    }
+
+    // Watch the progress spinner to determine job in-progress/complete
+    function watchForCompletion() {
+        const spinner = document.getElementById('spinner');
+        if (!spinner) return;
+
+        // Already complete — nothing to watch
+        if (isBuildComplete()) return;
+
+        // In progress — reload when spinner hides
+        const observer = new MutationObserver(() => {
+            if (spinner.style.display === 'none') {
+                observer.disconnect();
+                location.reload();
+            }
+        });
+        observer.observe(spinner, { attributes: true, attributeFilter: ['style'] });
+    }
+
+    function waitForConsoleFinished(callback) {
+        window.addEventListener('jenkins:consoleFinished', callback, { once: true });
+
+        const out = document.getElementById('out');
+        if (out && out.querySelector('.pipeline-new-node[label]')) {
+            window.removeEventListener('jenkins:consoleFinished', callback);
+            callback();
+        }
+    }
+
     function init() {
         setStickyOffset();
         const out = document.getElementById('out');
         if (!out) return;
         buildCollapsibles(out);
-        observeNewContent(out);
     }
 
     function makeSection(label, nodes, defaultCollapsed) {
@@ -129,12 +162,10 @@
     }
 
     function buildCollapsibles(out) {
-        if (out.querySelector('.jk-stage-header')) return;
+        injectStyles();
 
         const stageNodes = [...out.querySelectorAll('.pipeline-new-node[label]')];
         if (stageNodes.length === 0) return;
-
-        injectStyles();
 
         // --- Section 1: everything before the first labeled stage node ---
         const firstStage = stageNodes[0];
@@ -211,15 +242,6 @@
         document.head.appendChild(style);
     }
 
-    function observeNewContent(out) {
-        let debounce;
-        const observer = new MutationObserver(() => {
-            clearTimeout(debounce);
-            debounce = setTimeout(() => buildCollapsibles(out), 500);
-        });
-        observer.observe(out, { childList: true, subtree: true });
-    }
-
     function setStickyOffset() {
         const jenkinsHeader = document.querySelector('.jenkins-header');
         if (!jenkinsHeader) return;
@@ -227,13 +249,11 @@
         document.documentElement.style.setProperty('--jk-sticky-top', `${height}px`);
     }
 
-    let attempts = 0;
-    const poll = setInterval(() => {
-        if (document.getElementById('out') || attempts++ > 20) {
-            clearInterval(poll);
-            init();
-        }
-    }, 300);
+    // For completed builds: init directly via consoleFinished / existing nodes
+    waitForConsoleFinished(() => init());
+
+    // For live builds: reload when build completes so we get a clean DOM
+    watchForCompletion();
 
 })();
 
