@@ -257,3 +257,15 @@ function deactivate_or_exit() {
 zle -N deactivate_or_exit
 bindkey '^D' deactivate_or_exit
 
+# Add VS Code to path in WSL
+code_path="/mnt/c/Users/Jeffrey.Mallal/AppData/Local/Programs/Microsoft\ VS\ Code/"
+if [ -e $code_path ]; then
+  export PATH=$PATH:/mnt/c/Users/Jeffrey.Mallal/AppData/Local/Programs/Microsoft\ VS\ Code/
+fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+source ~/.local/share/wt/wt.sh
+

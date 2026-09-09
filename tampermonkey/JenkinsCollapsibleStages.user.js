@@ -4,6 +4,7 @@
 // @version      2.2
 // @description  Collapse/expand pipeline stages in Jenkins console output by stage label
 // @match        <jenkins-url>/*/console
+// @match        <jenkins-url>/*/consoleFull
 // @run-at       document-end
 // ==/UserScript==
 
