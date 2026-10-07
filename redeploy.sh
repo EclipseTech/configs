@@ -7,8 +7,8 @@ if [[ "$DISTRO" == '"Ubuntu"' ]]; then
     # Debian
     sudo apt-get update
     sudo apt-get install -y zsh zsh-doc dos2unix curl inotify-tools
-    # TODO change to python git-up and stop installing ruby
-    #sudo gem install git-up
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    uv tool install git-up
 elif [[ "$DISTRO" == '"CentOS Linux"' ]]; then
     sudo yum install -y zsh
 fi

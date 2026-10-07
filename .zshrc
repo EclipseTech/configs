@@ -239,6 +239,7 @@ bindkey '^r' history-incremental-search-backward
 bindkey '^R' history-incremental-search-backward
 
 # Run deactive when in virtualenv on ^D
+setopt IGNORE_EOF # req to not exit before looking up keybind function
 function deactivate_or_exit() {
   if declare -f deactivate > /dev/null
   then
