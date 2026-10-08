@@ -1,0 +1,9 @@
+{
+  "name": "context-bar",
+  "version": "0.1.0",
+  "description": "Context-window usage bar above the prompt, with cost, per-turn growth and rate limits, toggled with /context-bar",
+  "author": {
+    "name": "Jef Mallal"
+  },
+  "types": "./types/index.d.ts"
+}
