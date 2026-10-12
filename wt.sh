@@ -18,8 +18,8 @@
 #   wt move | mv [<name>] [<dest>]
 #                            move a worktree (updates git's pointers properly);
 #                            a <dest> without '/' renames it in place
-#   wt rm | remove [-f] [-b] [<name>]
-#                            remove a worktree (-f force, -b also delete branch)
+#   wt rm | remove [-f] [-k] [<name>]
+#                            remove a worktree and its branch (-f force, -k keep branch)
 #   wt -h, --help            this message
 #
 # Optional: fzf (https://github.com/junegunn/fzf) for the interactive picker.
@@ -270,9 +270,9 @@ wt() {
         '                              move a worktree, updating git properly;' \
         '                              a <dest> without / renames it in place' \
         '                              no args: relocate current one under the base dir' \
-        '  wt rm | remove [-f] [-b] [<name>]' \
-        '                              remove a worktree (default: the current one)' \
-        '                              -f force (dirty tree), -b also delete its branch' \
+        '  wt rm | remove [-f] [-k] [<name>]' \
+        '                              remove a worktree and its branch (default: the current one)' \
+        '                              -f force (dirty tree), -k keep its branch' \
         '' \
         'config: ~/.worktree   worktree_base="~/workspace/worktree"' \
         '        $WT_BASE overrides it'
@@ -441,11 +441,12 @@ $(cd "$main" && command git worktree repair "$@" 2>&1)"
 
     rm|remove)
       shift
-      force=; delbranch=
+      force=; delbranch=1
       while [ "$#" -gt 0 ]; do
         case "$1" in
           -f|--force)  force=--force ;;
           -b|--branch) delbranch=1 ;;
+          -k|--keep-branch) delbranch= ;;
           --) shift; break ;;
           -*) printf 'wt: unknown option %s for rm\n' "$1" >&2; return 1 ;;
           *) break ;;
