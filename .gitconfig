@@ -72,3 +72,5 @@
 [pager]
     log1 = false
     branch = false
+[git-up "rebase"]
+	show-hashes = true

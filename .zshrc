@@ -17,6 +17,8 @@ ZSH_THEME="my"
 DISABLE_UPDATE_PROMPT=true
 DISABLE_AUTO_UPDATE=true
 
+# Add local ~/.zsh/completion loading
+fpath=(~/.zsh/completion $fpath)
 source $ZSH/oh-my-zsh.sh
 
 ################################################################
@@ -63,6 +65,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init - zsh)"
+  eval "$(pyenv virtualenv-init -)"
 fi
 
 ################################################################
@@ -157,10 +160,8 @@ fi
 ################################################################
 # => Completions
 ################################################################
-# Add local ~/.zsh/completion loading
-fpath=(~/.zsh/completion $fpath)
-# Enable zsh completion
-autoload -Uz compinit; compinit
+# Enable zsh completion (done by oh-my-zsh `source $ZSH/oh-my-zsh.sh`)
+#autoload -Uz compinit && compinit
 
 # Tab once = list options, again start completing options
 setopt automenu
