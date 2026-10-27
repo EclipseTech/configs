@@ -40,9 +40,9 @@ const usageAt = (total: number, startedAt = 1) => ({
   },
 })
 
-const run = (args: string) => ({
+const run = (args: string, isFullscreen = true) => ({
   command: 'context-bar', args,
-  origin: { kind: 'composer' }, presentation: { isFullscreen: true, columns: 120 },
+  origin: { kind: 'composer' }, presentation: { isFullscreen, columns: 120 },
 }) as const
 
 const BAND_PROPS = {
@@ -235,4 +235,71 @@ test('leaves turns to compact out of the compact view', async ($, on) => {
   }
   expect(await ui.find({ type: 'Text', text: 'Δ+20k' })).toBeDefined()
   expect(await ui.find({ type: 'Text', text: '~4 turns to compact' })).toBeUndefined()
+})
+
+test('takes its colors, thresholds and bar width from the settings', {
+  options: { accentColor: '#112233', warnPercent: 30, dangerPercent: 45, compactBarWidth: 40 },
+}, async ($, on) => {
+  mock.clock(on, { now: NOW })
+  engine(on, () => usageAt(100_000))
+  await $.command.run(run('compact'))
+  await $.command.run(run('below'))
+  const ui = await mountAt($, 'terminal', 'below')
+  expect((await ui.find({ type: 'Text', text: ' 50% ' }))?.props.backgroundColor).toBe('error')
+  expect((await ui.find({ type: 'Text', text: '◆' }))?.props.color).toBe('#112233')
+  expect((await ui.find({ key: 'bar' }))?.props.width).toBe(40)
+})
+
+test('falls back to the defaults for settings out of shape', {
+  options: { accentColor: 'teal', warnPercent: 90, dangerPercent: 20 },
+}, async ($, on) => {
+  mock.clock(on, { now: NOW })
+  engine(on, () => usageAt(100_000))
+  await $.command.run(run('compact'))
+  await $.command.run(run('below'))
+  const ui = await mountAt($, 'terminal', 'below')
+  // Red never starts below yellow, so 50% is still green under a 90% yellow.
+  expect((await ui.find({ type: 'Text', text: ' 50% ' }))?.props.backgroundColor).toBe('success')
+  expect((await ui.find({ type: 'Text', text: '◆' }))?.props.color).toBe('#D97757')
+})
+
+test('refuses the side dock off fullscreen', async ($, on) => {
+  mock.clock(on, { now: NOW })
+  const store = engine(on, () => usageAt(100_000))
+  const open = panes(on)
+  expect((await $.command.run(run('side', false))).text).toContain('/tui fullscreen')
+  expect(store.get('position')).toBeUndefined()
+  expect(open.has('context-bar')).toBe(false)
+})
+
+test('draws a stored side position below the prompt off fullscreen, without the dock', async ($, on) => {
+  const clock = mock.clock(on, { now: NOW })
+  const store = engine(on, () => usageAt(100_000))
+  const open = panes(on)
+  store.set('position', 'side')
+  await $.session.start({ cwd: '/' } as never)
+  await clock.advance(0)
+  const hint = await $.ui.mount({
+    plugin: 'context-bar', surface: 'terminal', component: 'PromptHint', props: HINT_PROPS as never,
+    viewport: { columns: 160, rows: 40, isFullscreen: false },
+  })
+  expect(open.has('context-bar')).toBe(false)
+  expect(await hint.find({ type: 'Text', text: ' 50% ' })).toBeDefined()
+  expect(await hint.find({ type: 'Button', key: 'dock-toggle' } as never)).toBeUndefined()
+  expect(store.get('position')).toBe('side')
+})
+
+test('opens a stored side dock once a drawing reports fullscreen', async ($, on) => {
+  const clock = mock.clock(on, { now: NOW })
+  const store = engine(on, () => usageAt(100_000))
+  const open = panes(on)
+  store.set('position', 'side')
+  await $.session.start({ cwd: '/' } as never)
+  expect(open.has('context-bar')).toBe(false)
+  await $.ui.mount({
+    plugin: 'context-bar', surface: 'terminal', component: 'PromptHint', props: HINT_PROPS as never,
+    viewport: { columns: 160, rows: 40, isFullscreen: true },
+  })
+  await clock.advance(0)
+  expect(open.has('context-bar')).toBe(true)
 })

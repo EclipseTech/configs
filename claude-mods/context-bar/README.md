@@ -49,7 +49,23 @@ The mode and position are remembered across sessions.
 
 In the `side` position a `[ < ]` button sits under the prompt, with the compact bar beside it. Click it to open the dock, a pane beside the transcript that lists the bar, delta, turns to compact, cost, every category and the rate limits, one per row. While the dock is open, nothing extra shows under the prompt; click `[ > ]` at the top of the dock to hide it. Closing the dock with Claude Code's own close mark does the same. Whether it's open is remembered across sessions.
 
-The dock needs Claude Code's fullscreen renderer: run `/tui fullscreen` (restarts and resumes the session), or set `"tui": "fullscreen"` in `~/.claude/settings.json` to keep it on. Fullscreen also lets you click the buttons with the mouse. The dock sits beside the transcript at 110 columns or wider; otherwise, or off fullscreen, Claude Code shows the pane above the prompt. When it opens on its own at session start, it needs 144 columns, and waits until then.
+The dock works only in Claude Code's fullscreen layout: run `/tui fullscreen` (restarts and resumes the session), or set `"tui": "fullscreen"` in `~/.claude/settings.json` to keep it on. Off fullscreen, `/context-bar side` says so and changes nothing, and a `side` position saved from a fullscreen session draws the bar below the prompt instead, keeping `side` for the next fullscreen session. Fullscreen also lets you click the buttons with the mouse. The dock sits beside the transcript at 110 columns or wider; narrower, Claude Code shows the pane above the prompt. When it opens on its own at session start, it needs 144 columns, and waits until then.
+
+## Settings
+
+Set these in `/config` (the plugin's rows) or under `pluginConfigs["context-bar@context-bar"].options` in `~/.claude/settings.json`. A change reloads the mod.
+
+| Option | Default | Does |
+| --- | --- | --- |
+| `accentColor` | `#D97757` | Color of the ◆ marks, as `#RRGGBB` |
+| `compactBarWidth` | 24 | Bar width in compact mode, 8 to 80 columns |
+| `dockColumns` | 38 | Width the side dock asks for, 24 to 120 columns |
+| `refreshSeconds` | 60 | How often the reset countdowns move on, 10 to 3600 seconds |
+| `turnsWindow` | 5 | Turns the turns-to-compact estimate averages over, 1 to 20 |
+| `warnPercent` | 50 | Badge turns yellow from this share of the window |
+| `dangerPercent` | 80 | Badge turns red from this share; never below `warnPercent` |
+
+Values out of range are clamped; a color that isn't `#RRGGBB` falls back to the default.
 
 ## Running it
 

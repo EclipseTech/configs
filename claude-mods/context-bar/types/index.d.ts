@@ -33,6 +33,9 @@ declare module 'claude-code' {
       position: Position
       // Whether the side dock is open; only drawn in the `side` position.
       isDockOpen: boolean
+      // Whether the terminal is in the fullscreen layout, which the side dock
+      // needs; null until a command or a drawing reports it.
+      isFullscreen: boolean | null
       limits: Limit[]
       cost: number | null
       history: History

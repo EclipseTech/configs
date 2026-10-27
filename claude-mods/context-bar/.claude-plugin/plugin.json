@@ -5,5 +5,49 @@
   "author": {
     "name": "Jef Mallal"
   },
-  "types": "./types/index.d.ts"
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "accentColor": {
+      "type": "string",
+      "title": "Accent color",
+      "description": "Hex color of the ◆ marks, as #RRGGBB.",
+      "default": "#D97757"
+    },
+    "compactBarWidth": {
+      "type": "number",
+      "title": "Compact bar width",
+      "description": "Width of the bar in compact mode, in columns (8 to 80).",
+      "default": 24
+    },
+    "dockColumns": {
+      "type": "number",
+      "title": "Side dock width",
+      "description": "Width the side dock asks for, in columns (24 to 120). You can still drag it wider or narrower.",
+      "default": 38
+    },
+    "refreshSeconds": {
+      "type": "number",
+      "title": "Countdown refresh",
+      "description": "How often the rate-limit reset countdowns move on, in seconds (10 to 3600).",
+      "default": 60
+    },
+    "turnsWindow": {
+      "type": "number",
+      "title": "Turns averaged",
+      "description": "How many recent turns the turns-to-compact estimate averages over (1 to 20).",
+      "default": 5
+    },
+    "warnPercent": {
+      "type": "number",
+      "title": "Yellow from",
+      "description": "Share of the window, in percent, at which the badge turns yellow.",
+      "default": 50
+    },
+    "dangerPercent": {
+      "type": "number",
+      "title": "Red from",
+      "description": "Share of the window, in percent, at which the badge turns red.",
+      "default": 80
+    }
+  }
 }

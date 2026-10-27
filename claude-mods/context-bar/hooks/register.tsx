@@ -1,5 +1,5 @@
 import { atom, read, update } from 'claude-code'
-import type { EngineInterface, Register, RenderElement, RenderInput, SessionRateLimit } from 'claude-code'
+import type { EngineInterface, PluginOptions, Register, RenderElement, RenderInput, SessionRateLimit } from 'claude-code'
 
 import type { History, Limit, Mode, Position, Segment, Snapshot } from '../types'
 
@@ -7,6 +7,7 @@ const snapshot = atom({ plugin: 'context-bar', key: 'snapshot' } as const, null)
 const mode = atom({ plugin: 'context-bar', key: 'mode' } as const, 'compact' as Mode)
 const position = atom({ plugin: 'context-bar', key: 'position' } as const, 'below' as Position)
 const isDockOpen = atom({ plugin: 'context-bar', key: 'isDockOpen' } as const, true)
+const isFullscreen = atom({ plugin: 'context-bar', key: 'isFullscreen' } as const, null as boolean | null)
 const limits = atom({ plugin: 'context-bar', key: 'limits' } as const, [] as Limit[])
 const cost = atom({ plugin: 'context-bar', key: 'cost' } as const, null)
 const history = atom({ plugin: 'context-bar', key: 'history' } as const, { startedAt: 0, totals: [] } as History)
@@ -23,20 +24,57 @@ const DOCK_KEY = 'dockOpen'
 const DEFAULT_MODE: Mode = 'compact'
 const DEFAULT_POSITION: Position = 'below'
 
-const ACCENT = '#D97757'
 // Longer than any band is wide; the free track's box clips it to its share.
 const FREE_FILL = '─'.repeat(400)
-const MINI_BAR_WIDTH = 24
 // The compaction point: a tick through the free track, in the text colour so
 // no category's colour can match it.
 const MARK = '│'
 const PANE = 'context-bar'
-// The dock's requested width; the person can drag it wider or narrower.
-const DOCK_COLUMNS = 38
-const TICK_MS = 60_000
-// How many recent turns the turns-to-compact estimate averages over.
-const RATE_WINDOW = 5
-const HISTORY_MAX = RATE_WINDOW + 1
+
+// The person's settings (the manifest's userConfig), read again on each load.
+// `dockColumns` is the dock's requested width; the person can drag it wider or
+// narrower. `turnsWindow` is how many recent turns the turns-to-compact
+// estimate averages over.
+type Config = {
+  accent: string
+  compactBarWidth: number
+  dockColumns: number
+  tickMs: number
+  turnsWindow: number
+  warnPercent: number
+  dangerPercent: number
+}
+
+const DEFAULT_ACCENT = '#D97757'
+
+let config: Config = {
+  accent: DEFAULT_ACCENT,
+  compactBarWidth: 24,
+  dockColumns: 38,
+  tickMs: 60_000,
+  turnsWindow: 5,
+  warnPercent: 50,
+  dangerPercent: 80,
+}
+
+// A whole number within bounds; the fallback for anything else.
+const bounded = (v: unknown, fallback: number, min: number, max: number) =>
+  typeof v === 'number' && Number.isFinite(v) ? Math.min(max, Math.max(min, Math.round(v))) : fallback
+
+const toConfig = (options: PluginOptions): Config => {
+  const accent = options.accentColor
+  const warnPercent = bounded(options.warnPercent, 50, 0, 100)
+  return {
+    accent: typeof accent === 'string' && /^#[0-9a-f]{6}$/i.test(accent.trim()) ? accent.trim() : DEFAULT_ACCENT,
+    compactBarWidth: bounded(options.compactBarWidth, 24, 8, 80),
+    dockColumns: bounded(options.dockColumns, 38, 24, 120),
+    tickMs: bounded(options.refreshSeconds, 60, 10, 3600) * 1000,
+    turnsWindow: bounded(options.turnsWindow, 5, 1, 20),
+    warnPercent,
+    // Red never starts below yellow.
+    dangerPercent: Math.max(warnPercent, bounded(options.dangerPercent, 80, 0, 100)),
+  }
+}
 
 // Shorter legend labels for /context's category names; others show as given.
 const LABELS: Record<string, string> = {
@@ -56,6 +94,8 @@ const LIMIT_LABELS: Record<string, string> = {
 }
 
 const USAGE_TEXT = 'Usage: /context-bar [compact|full|on|off|above|below|side]'
+const SIDE_NEEDS_FULLSCREEN =
+  'The side dock needs the fullscreen layout: run /tui fullscreen, then /context-bar side.'
 
 const short = (n: number) => {
   const abs = Math.abs(n)
@@ -73,7 +113,7 @@ const usd = (n: number) => `$${n.toFixed(2)}`
 const growOf = (tokens: number, max: number) => Math.min(10_000, (tokens / max) * 10_000)
 
 const badgeColor = (percent: number) =>
-  percent < 50 ? 'success' : percent < 80 ? 'warning' : 'error'
+  percent < config.warnPercent ? 'success' : percent < config.dangerPercent ? 'warning' : 'error'
 
 // Time left as `45m`, `2h 14m` or `3d 4h`, rounded up to the minute; null once
 // it has passed.
@@ -97,7 +137,7 @@ const deltaOf = (totals: number[]) =>
 // null without a threshold, enough readings or any growth.
 const turnsToCompact = (snap: Snapshot, totals: number[]) => {
   if (snap.threshold === null || totals.length < 2) return null
-  const recent = totals.slice(-(RATE_WINDOW + 1))
+  const recent = totals.slice(-(config.turnsWindow + 1))
   const perTurn = ((recent.at(-1) ?? 0) - (recent[0] ?? 0)) / (recent.length - 1)
   if (perTurn <= 0) return null
   return Math.max(0, Math.ceil((snap.threshold - snap.total) / perTurn))
@@ -160,7 +200,7 @@ const refresh = async ($: EngineInterface, record: Recording = 'none') => {
         return { startedAt: usage.startedAt, totals }
       }
       const kept = record === 'compact' ? [] : totals
-      return { startedAt: usage.startedAt, totals: [...kept, next.total].slice(-HISTORY_MAX) }
+      return { startedAt: usage.startedAt, totals: [...kept, next.total].slice(-(config.turnsWindow + 1)) }
     })
   } catch {
     // No reading this time; the bar keeps the last one.
@@ -188,19 +228,45 @@ const isMode = (v: unknown): v is Mode => v === 'compact' || v === 'full' || v =
 
 const isPosition = (v: unknown): v is Position => v === 'above' || v === 'below' || v === 'side'
 
-// Opens or closes the dock to match the mode, position and the person's choice.
+// Opens or closes the dock to match the mode, position, the person's choice
+// and the layout: off fullscreen the dock never opens.
 const syncDock = async ($: EngineInterface) => {
   const isWanted =
-    (await read($, mode)) !== 'off' && (await read($, position)) === 'side' && (await read($, isDockOpen))
+    (await read($, mode)) !== 'off' &&
+    (await read($, position)) === 'side' &&
+    (await read($, isDockOpen)) &&
+    (await read($, isFullscreen)) === true
   try {
     if (isWanted) {
-      await $.ui.open({ id: PANE, title: 'Context', columns: DOCK_COLUMNS })
+      await $.ui.open({ id: PANE, title: 'Context', columns: config.dockColumns })
     } else if ((await $.ui.panes()).some(p => p.id === PANE)) {
       await $.ui.close({ id: PANE })
     }
   } catch {
     // Refused by another hook; the toggle stays usable.
   }
+}
+
+// Records the layout a command or a drawing reports (fixed per session on the
+// terminal), opening or closing the dock to match.
+const learnFullscreen = async ($: EngineInterface, value: boolean | undefined) => {
+  if (value === undefined || (await read($, isFullscreen)) === value) {
+    return
+  }
+  await update($, isFullscreen, () => value)
+  await syncDock($)
+}
+
+// Where the bar draws at this drawing: a stored `side` draws below the prompt
+// off fullscreen, and the layout the drawing reports is recorded after it.
+const drawnPosition = async ($: EngineInterface, e: RenderInput<'PromptHint'>): Promise<Position> => {
+  const reported = e.viewport?.isFullscreen
+  const known = await read($, isFullscreen)
+  if (reported !== undefined && reported !== known) {
+    $.clock.after(0, () => void learnFullscreen($, reported))
+  }
+  const at = await read($, position)
+  return at === 'side' && (reported ?? known) !== true ? 'below' : at
 }
 
 const setDock = async ($: EngineInterface, value: boolean) => {
@@ -220,7 +286,9 @@ const setPosition = async ($: EngineInterface, value: Position) => {
   }
 }
 
-export const register: Register = on => {
+export const register: Register = (on, options) => {
+  config = toConfig(options)
+
   on('session.start', async ($, e, next) => {
     const result = await next(e)
     await $.command.register({
@@ -237,13 +305,17 @@ export const register: Register = on => {
     await update($, isDockOpen, () => storedDock !== false)
     void syncDock($)
     $.clock.after(0, () => void refresh($))
-    $.clock.every(TICK_MS, () => void tick($))
+    $.clock.every(config.tickMs, () => void tick($))
 
     return result
   })
 
   on('command.run', { command: 'context-bar' }, async ($, e) => {
     const arg = e.args.trim().toLowerCase()
+    await learnFullscreen($, e.presentation.isFullscreen)
+    if (arg === 'side' && !e.presentation.isFullscreen) {
+      return { text: SIDE_NEEDS_FULLSCREEN }
+    }
     if (isPosition(arg)) {
       await setPosition($, arg)
       return { text: arg === 'side' ? 'Context bar in the side dock.' : `Context bar ${arg} the prompt.` }
@@ -317,7 +389,7 @@ export const register: Register = on => {
   // dock's own `>` hides it.
   on('ui.render', { component: 'PromptHint' }, async ($, e, next) => {
     const current = await read($, mode)
-    const at = await read($, position)
+    const at = await drawnPosition($, e)
     if (current === 'off' || at === 'above') {
       return next(e)
     }
@@ -376,7 +448,7 @@ const draw = async (
 
   const head = (
     <Box key="head" flexDirection="row">
-      <Text color={ACCENT}>◆ </Text>
+      <Text color={config.accent}>◆ </Text>
       <Text bold>context </Text>
     </Box>
   )
@@ -441,7 +513,7 @@ const draw = async (
       flexDirection="row"
       height={1}
       overflow="hidden"
-      {...(isCompact ? { width: MINI_BAR_WIDTH, flexShrink: 0 } : {})}
+      {...(isCompact ? { width: config.compactBarWidth, flexShrink: 0 } : {})}
     >
       {used.map((s, i) => (
         <Box
@@ -538,7 +610,7 @@ const draw = async (
         {limitItems.length > 0 && <Text> </Text>}
         {limitItems.length > 0 && (
           <Box key="usage-head" flexDirection="row">
-            <Text color={ACCENT}>◆ </Text>
+            <Text color={config.accent}>◆ </Text>
             <Text bold>usage</Text>
           </Box>
         )}
@@ -551,7 +623,7 @@ const draw = async (
     return (
       <Box flexDirection="row" flexWrap="wrap" columnGap={2} paddingX={1}>
         <Box key="main" flexDirection="row" columnGap={1}>
-          <Text color={ACCENT}>◆</Text>
+          <Text color={config.accent}>◆</Text>
           {badge}
           {bar}
           {totalsText}
@@ -593,7 +665,7 @@ const draw = async (
       {limitItems.length > 0 && (
         <Box flexDirection="row" flexWrap="wrap" columnGap={2}>
           <Box key="usage-head" flexDirection="row">
-            <Text color={ACCENT}>◆ </Text>
+            <Text color={config.accent}>◆ </Text>
             <Text bold>usage</Text>
           </Box>
           {limitItems}
