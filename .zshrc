@@ -68,6 +68,22 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv virtualenv-init -)"
 fi
 
+if (( $+commands[explorer.exe] )); then
+  function open() {
+    [ $# -eq 0 ] && set -- .
+    local target
+    for target in "$@"; do
+      if [ -e "$target" ]; then
+        explorer.exe "$(wslpath -w "$(realpath "$target")")"
+      else
+        # Not a local path, e.g. a URL: pass it through as-is
+        explorer.exe "$target"
+      fi
+    done
+    return 0  # explorer.exe returns 1 even when it succeeds
+  }
+fi
+
 ################################################################
 # => Aliases
 ################################################################
